@@ -276,6 +276,10 @@
         cursor:pointer;
         transition:.22s ease;
         box-shadow:0 8px 18px rgba(0,0,0,.18);
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:6px;
     }
 
     .jogador:hover{
@@ -283,12 +287,35 @@
         border-color:rgba(255,255,255,.35);
     }
 
+    .foto-jogador{
+        width:46px;
+        height:46px;
+        border-radius:50%;
+        object-fit:cover;
+        border:2px solid rgba(255,255,255,.45);
+        background:#0b1220;
+        flex-shrink:0;
+    }
+
+    .avatar-vazio{
+        width:46px;
+        height:46px;
+        border-radius:50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:rgba(255,255,255,.16);
+        border:2px dashed rgba(255,255,255,.45);
+        font-size:20px;
+        flex-shrink:0;
+    }
+
     .jogador .nome{
         display:block;
         font-weight:700;
         font-size:12px;
         line-height:1.15;
-        margin-top:4px;
+        margin-top:0;
     }
 
     .jogador .num{
@@ -334,6 +361,35 @@
         background:#0b1220;
         color:#fff;
         outline:none;
+    }
+
+    .linha-foto{
+        display:grid;
+        grid-template-columns:1fr auto;
+        gap:10px;
+        align-items:center;
+        margin-bottom:10px;
+    }
+
+    .foto-preview{
+        width:64px;
+        height:64px;
+        border-radius:50%;
+        border:2px solid rgba(255,255,255,.28);
+        object-fit:cover;
+        background:#0b1220;
+    }
+
+    .foto-preview-vazia{
+        width:64px;
+        height:64px;
+        border-radius:50%;
+        border:2px dashed rgba(255,255,255,.28);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:rgba(255,255,255,.08);
+        font-size:22px;
     }
 
     .acoes-jogador{
@@ -427,6 +483,10 @@
             grid-template-columns:1fr;
         }
 
+        .linha-foto{
+            grid-template-columns:1fr;
+        }
+
         .time-selecionado{
             flex-direction:column;
         }
@@ -468,7 +528,7 @@
         <div class="time-selecionado">
             <div>
                 <h2 id="nomeTime">Selecione uma seleção</h2>
-                <div class="texto-ajuda">Clique em um jogador do campo para editar. Você pode digitar o nome que quiser.</div>
+                <div class="texto-ajuda">Clique em um jogador do campo para editar. Você pode digitar o nome que quiser e escolher a foto do computador.</div>
             </div>
             <div class="tag-grupo" id="grupoTime">Sem grupo</div>
         </div>
@@ -488,6 +548,11 @@
                         <option value="titular">Titular</option>
                         <option value="banco">Banco</option>
                     </select>
+                </div>
+
+                <div class="linha-foto">
+                    <input type="file" id="fotoJogador" accept="image/*" onchange="carregarFoto(event)">
+                    <div id="previewFoto" class="foto-preview-vazia">📷</div>
                 </div>
 
                 <div class="acoes-jogador">
@@ -528,13 +593,6 @@ const gruposData = [
     { nome:"GRUPO L", times:["Jordânia","Uzbequistão","Nova Zelândia","Panamá"] }
 ];
 
-const posicoes = [
-    ["GOL"],
-    ["LE","ZAG","ZAG","LD"],
-    ["VOL","MEI","MEI"],
-    ["PE","CA","PD"]
-];
-
 const defaultRosters = {
     "Brasil": {
         titulares: [
@@ -560,14 +618,46 @@ const defaultRosters = {
 
 let timeAtual = null;
 let selecionado = { tipo:null, indice:null };
+let fotoAtual = "";
+
+function criarTitularesVazios(){
+    return Array.from({ length: 11 }, () => null);
+}
+
+function normalizarState(state){
+    const titulares = criarTitularesVazios();
+    if(Array.isArray(state.titulares)){
+        state.titulares.forEach((jogador, i) => {
+            if(i < 11) titulares[i] = jogador || null;
+        });
+    }
+
+    return {
+        titulares,
+        banco: Array.isArray(state.banco) ? state.banco : []
+    };
+}
 
 function getState(time){
     const saved = localStorage.getItem("copa2026_" + time);
-    if(saved) return JSON.parse(saved);
+    if(saved){
+        try{
+            return normalizarState(JSON.parse(saved));
+        }catch(e){
+            return normalizarState({ titulares: [], banco: [] });
+        }
+    }
 
-    const base = defaultRosters[time] || { titulares:[], banco:[] };
+    const base = defaultRosters[time] || { titulares: [], banco: [] };
+    const titulares = criarTitularesVazios();
+    if(base.titulares){
+        base.titulares.forEach((jogador, i) => {
+            if(i < 11) titulares[i] = structuredClone(jogador);
+        });
+    }
+
     return {
-        titulares: base.titulares ? structuredClone(base.titulares) : [],
+        titulares,
         banco: base.banco ? structuredClone(base.banco) : []
     };
 }
@@ -602,18 +692,36 @@ function gerarGrupos(listaFiltrada = null){
     });
 }
 
+function atualizarPreviewFoto(foto){
+    const preview = document.getElementById("previewFoto");
+    if(foto){
+        preview.className = "foto-preview";
+        preview.innerHTML = `<img src="${foto}" alt="Foto do jogador" class="foto-preview" />`;
+    }else{
+        preview.className = "foto-preview-vazia";
+        preview.textContent = "📷";
+    }
+}
+
+function limparCampos(){
+    document.getElementById("nomeJogador").value = "";
+    document.getElementById("numeroJogador").value = "";
+    document.getElementById("tipoJogador").value = "titular";
+    document.getElementById("fotoJogador").value = "";
+    fotoAtual = "";
+    atualizarPreviewFoto("");
+}
+
 function selecionarTime(time){
     timeAtual = time;
     selecionado = { tipo:null, indice:null };
+    fotoAtual = "";
 
     const grupo = gruposData.find(g => g.times.includes(time));
     document.getElementById("nomeTime").textContent = time;
     document.getElementById("grupoTime").textContent = grupo ? grupo.nome : "Sem grupo";
 
-    document.getElementById("nomeJogador").value = "";
-    document.getElementById("numeroJogador").value = "";
-    document.getElementById("tipoJogador").value = "titular";
-
+    limparCampos();
     renderizarTime();
     gerarGrupos(document.getElementById("pesquisa").value.trim() ? filtrarDados() : null);
 }
@@ -629,21 +737,23 @@ function renderizarTime(){
     let html = "";
 
     const mapaListras = [
-        ["linha-formacao linha-1", 1, 0],
-        ["linha-formacao linha-4", 4, 1],
-        ["linha-formacao linha-3", 3, 5],
-        ["linha-formacao linha-3", 3, 8]
+        ["linha-formacao linha-1", 1],
+        ["linha-formacao linha-4", 4],
+        ["linha-formacao linha-3", 3],
+        ["linha-formacao linha-3", 3]
     ];
 
     let idx = 0;
-    mapaListras.forEach(([classe, qtde], linhaIndex) => {
+    mapaListras.forEach(([classe, qtde]) => {
         html += `<div class="${classe}">`;
         for(let i=0;i<qtde;i++){
             const jogador = titulares[idx];
             const nome = jogador?.nome || "Adicionar";
             const numero = jogador?.numero || "--";
+            const foto = jogador?.foto || "";
             html += `
                 <div class="jogador ${jogador ? "" : "vazio"}" onclick="editarSlot('titular', ${idx})">
+                    ${foto ? `<img src="${foto}" alt="${nome}" class="foto-jogador">` : `<div class="avatar-vazio">👤</div>`}
                     <span class="num">${numero}</span>
                     <span class="nome">${nome}</span>
                 </div>
@@ -658,19 +768,31 @@ function renderizarTime(){
     const listaTitulares = document.getElementById("listaTitulares");
     const listaBanco = document.getElementById("listaBanco");
 
-    listaTitulares.innerHTML = titulares.length
-        ? titulares.map((j, i) => `
-            <li onclick="editarSlot('titular', ${i})">
-                <span>${j.numero} - ${j.nome}</span>
-                <span class="mini">editar</span>
-            </li>
-        `).join("")
+    const titularesCheios = titulares.filter(Boolean);
+
+    listaTitulares.innerHTML = titularesCheios.length
+        ? titulares.map((j, i) => {
+            if(!j){
+                return `
+                    <li onclick="editarSlot('titular', ${i})">
+                        <span>Vazio</span>
+                        <span class="mini">editar</span>
+                    </li>
+                `;
+            }
+            return `
+                <li onclick="editarSlot('titular', ${i})">
+                    <span>${j.numero || "--"} - ${j.nome || "Sem nome"}</span>
+                    <span class="mini">editar</span>
+                </li>
+            `;
+        }).join("")
         : `<div class="vazio-msg">Nenhum titular adicionado ainda.</div>`;
 
     listaBanco.innerHTML = banco.length
         ? banco.map((j, i) => `
             <li onclick="editarSlot('banco', ${i})">
-                <span>${j.numero} - ${j.nome}</span>
+                <span>${j.numero || "--"} - ${j.nome || "Sem nome"}</span>
                 <span class="mini">editar</span>
             </li>
         `).join("")
@@ -689,12 +811,41 @@ function editarSlot(tipo, indice){
     document.getElementById("tipoJogador").value = tipo;
 
     if(jogador){
-        document.getElementById("nomeJogador").value = jogador.nome;
-        document.getElementById("numeroJogador").value = jogador.numero;
+        document.getElementById("nomeJogador").value = jogador.nome || "";
+        document.getElementById("numeroJogador").value = jogador.numero || "";
+        fotoAtual = jogador.foto || "";
+        atualizarPreviewFoto(fotoAtual);
     }else{
         document.getElementById("nomeJogador").value = "";
         document.getElementById("numeroJogador").value = "";
+        fotoAtual = "";
+        atualizarPreviewFoto("");
     }
+}
+
+function carregarFoto(event){
+    const arquivo = event.target.files[0];
+    if(!arquivo) return;
+
+    const leitor = new FileReader();
+    leitor.onload = function(e){
+        fotoAtual = e.target.result;
+        atualizarPreviewFoto(fotoAtual);
+
+        if(timeAtual && selecionado.tipo !== null && selecionado.indice !== null){
+            const state = getState(timeAtual);
+
+            if(!state[selecionado.tipo][selecionado.indice]){
+                state[selecionado.tipo][selecionado.indice] = { nome:"", numero:"", foto:fotoAtual };
+            }else{
+                state[selecionado.tipo][selecionado.indice].foto = fotoAtual;
+            }
+
+            saveState(timeAtual, state);
+            renderizarTime();
+        }
+    };
+    leitor.readAsDataURL(arquivo);
 }
 
 function salvarJogador(){
@@ -715,16 +866,21 @@ function salvarJogador(){
     const state = getState(timeAtual);
 
     if(selecionado.tipo && selecionado.indice !== null && tipo === selecionado.tipo){
-        state[tipo][selecionado.indice] = { nome, numero };
+        state[tipo][selecionado.indice] = {
+            nome,
+            numero,
+            foto: fotoAtual || state[tipo][selecionado.indice]?.foto || ""
+        };
     }else{
         if(tipo === "titular"){
-            if(state.titulares.length >= 11){
+            const indiceVazio = state.titulares.findIndex(j => !j);
+            if(indiceVazio === -1){
                 alert("O time já tem 11 titulares. Edite um slot ou mova para o banco.");
                 return;
             }
-            state.titulares.push({ nome, numero });
+            state.titulares[indiceVazio] = { nome, numero, foto: fotoAtual };
         }else{
-            state.banco.push({ nome, numero });
+            state.banco.push({ nome, numero, foto: fotoAtual });
         }
     }
 
@@ -732,8 +888,7 @@ function salvarJogador(){
     renderizarTime();
 
     selecionado = { tipo:null, indice:null };
-    document.getElementById("nomeJogador").value = "";
-    document.getElementById("numeroJogador").value = "";
+    limparCampos();
 }
 
 function adicionarJogador(){
@@ -753,17 +908,22 @@ function adicionarJogador(){
 
     const state = getState(timeAtual);
 
-    if(tipo === "titular" && state.titulares.length >= 11){
-        alert("Já existem 11 titulares. Clique em um slot para editar.");
-        return;
+    if(tipo === "titular"){
+        const indiceVazio = state.titulares.findIndex(j => !j);
+        if(indiceVazio === -1){
+            alert("Já existem 11 titulares. Clique em um slot para editar.");
+            return;
+        }
+        state.titulares[indiceVazio] = { nome, numero, foto: fotoAtual };
+    }else{
+        state.banco.push({ nome, numero, foto: fotoAtual });
     }
 
-    state[tipo].push({ nome, numero });
     saveState(timeAtual, state);
     renderizarTime();
 
-    document.getElementById("nomeJogador").value = "";
-    document.getElementById("numeroJogador").value = "";
+    selecionado = { tipo:null, indice:null };
+    limparCampos();
 }
 
 function limparTime(){
@@ -772,6 +932,7 @@ function limparTime(){
 
     localStorage.removeItem("copa2026_" + timeAtual);
     renderizarTime();
+    limparCampos();
 }
 
 function filtrarDados(){
