@@ -1,161 +1,450 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Copa do Mundo 2026</title>
-
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, sans-serif;
-}
-
-body{
-    background:#020617;
-    color:white;
-    min-height:100vh;
-    padding:20px;
-    background-image: radial-gradient(circle at top,#0f172a,#020617);
-}
-
-/* TOPO */
-.topo{
-    text-align:center;
-    margin-bottom:30px;
-}
-
-.topo h1{
-    font-size:60px;
-    color:white;
-    text-shadow:0 0 20px #38bdf8;
-}
-
-.linha{
-    width:100%;
-    height:5px;
-    background:linear-gradient(to right, green, blue, red, yellow);
-    margin-top:15px;
-}
-
-/* CONTAINER */
-.container{
-    display:flex;
-    gap:20px;
-    align-items:flex-start;
-}
-
-/* GRUPOS */
-.grupos{
-    width:70%;
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:20px;
-}
-
-.grupo{
-    background:#0f172a;
-    border:1px solid #334155;
-    border-radius:15px;
-    padding:15px;
-    transition:0.3s;
-    min-height:260px;
-}
-
-.grupo:hover{
-    transform:translateY(-5px);
-    box-shadow:0 0 15px #38bdf8;
-}
-
-.grupo h2{
-    text-align:center;
-    margin-bottom:15px;
-    color:#38bdf8;
-    font-size:22px;
-}
-
-.time{
-    padding:12px;
-    margin:8px 0;
-    background:#111827;
-    border-radius:10px;
-    cursor:pointer;
-    transition:0.3s;
-    border:1px solid transparent;
-}
-
-.time:hover{
-    background:#16a34a;
-    transform:scale(1.03);
-    border-color:#22c55e;
-}
-
-/* LATERAL */
-.info{
-    width:30%;
-    background:#0f172a;
-    border-radius:20px;
-    padding:20px;
-    border:1px solid #334155;
-    position:sticky;
-    top:20px;
-    height:fit-content;
-}
-
-.info h2{
-    color:#38bdf8;
-    margin-bottom:20px;
-    font-size:35px;
-}
-
-.info h3{
-    margin-top:20px;
-    margin-bottom:10px;
-}
-
-.titulares{
-    color:#4ade80;
-}
-
-.banco{
-    color:#facc15;
-}
-
-li{
-    margin:7px 0;
-}
-
-/* RESPONSIVO */
-@media(max-width:1200px){
-    .container{
-        flex-direction:column;
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Arial, sans-serif;
     }
 
-    .grupos{
-        width:100%;
-        grid-template-columns:repeat(2,1fr);
+    body{
+        min-height:100vh;
+        background:
+            radial-gradient(circle at top, #0f172a 0%, #020617 55%);
+        color:#fff;
+        padding:20px;
+        overflow-x:hidden;
     }
 
-    .info{
-        width:100%;
-        position:static;
-    }
-}
-
-@media(max-width:700px){
-    .grupos{
-        grid-template-columns:1fr;
+    .topo{
+        text-align:center;
+        margin-bottom:20px;
     }
 
     .topo h1{
-        font-size:40px;
+        font-size:clamp(34px, 5vw, 64px);
+        font-weight:800;
+        text-shadow:0 0 18px rgba(56,189,248,.55);
+        margin-bottom:14px;
     }
-}
+
+    .linha{
+        width:100%;
+        height:5px;
+        border-radius:999px;
+        background:linear-gradient(90deg,#22c55e,#3b82f6,#a855f7,#ef4444,#facc15);
+        box-shadow:0 0 12px rgba(56,189,248,.35);
+    }
+
+    .container{
+        display:grid;
+        grid-template-columns: 1.25fr .95fr;
+        gap:20px;
+        align-items:start;
+    }
+
+    .painel{
+        background:rgba(15,23,42,.82);
+        border:1px solid rgba(148,163,184,.22);
+        border-radius:24px;
+        box-shadow:0 20px 50px rgba(0,0,0,.28);
+        backdrop-filter: blur(10px);
+    }
+
+    .esquerda{
+        padding:18px;
+    }
+
+    .barra-acoes{
+        display:flex;
+        gap:10px;
+        flex-wrap:wrap;
+        margin-bottom:16px;
+    }
+
+    .barra-acoes input{
+        flex:1;
+        min-width:220px;
+        padding:12px 14px;
+        border-radius:14px;
+        border:1px solid rgba(148,163,184,.25);
+        background:#0b1220;
+        color:#fff;
+        outline:none;
+    }
+
+    .btn{
+        border:none;
+        border-radius:14px;
+        padding:12px 14px;
+        cursor:pointer;
+        font-weight:700;
+        transition:.25s ease;
+    }
+
+    .btn:hover{
+        transform:translateY(-2px);
+    }
+
+    .btn-azul{
+        background:#2563eb;
+        color:#fff;
+    }
+
+    .btn-verde{
+        background:#16a34a;
+        color:#fff;
+    }
+
+    .btn-amarelo{
+        background:#f59e0b;
+        color:#111827;
+    }
+
+    .btn-cinza{
+        background:#334155;
+        color:#fff;
+    }
+
+    .titulo-sec{
+        color:#38bdf8;
+        font-size:22px;
+        margin-bottom:14px;
+        font-weight:800;
+    }
+
+    .grupos{
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:14px;
+    }
+
+    .grupo{
+        background:linear-gradient(180deg, rgba(15,23,42,.98), rgba(2,6,23,.95));
+        border:1px solid rgba(148,163,184,.18);
+        border-radius:18px;
+        padding:14px;
+        min-height:230px;
+        transition:.25s ease;
+    }
+
+    .grupo:hover{
+        transform:translateY(-4px);
+        box-shadow:0 0 20px rgba(56,189,248,.18);
+        border-color:rgba(56,189,248,.35);
+    }
+
+    .grupo h2{
+        text-align:center;
+        color:#60a5fa;
+        font-size:20px;
+        margin-bottom:12px;
+    }
+
+    .time{
+        background:#111827;
+        border:1px solid rgba(148,163,184,.14);
+        border-radius:14px;
+        padding:11px 12px;
+        margin-bottom:8px;
+        cursor:pointer;
+        display:flex;
+        align-items:center;
+        gap:8px;
+        transition:.2s ease;
+        user-select:none;
+    }
+
+    .time:hover{
+        background:#14532d;
+        border-color:#22c55e;
+        transform:scale(1.02);
+    }
+
+    .time.ativo{
+        background:#1d4ed8;
+        border-color:#60a5fa;
+        box-shadow:0 0 12px rgba(59,130,246,.35);
+    }
+
+    .direita{
+        padding:18px;
+        position:sticky;
+        top:18px;
+    }
+
+    .time-selecionado{
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        gap:12px;
+        margin-bottom:12px;
+    }
+
+    .time-selecionado h2{
+        font-size:34px;
+        color:#38bdf8;
+        line-height:1;
+    }
+
+    .tag-grupo{
+        padding:8px 12px;
+        border-radius:999px;
+        background:rgba(59,130,246,.18);
+        border:1px solid rgba(96,165,250,.25);
+        font-size:13px;
+        white-space:nowrap;
+    }
+
+    .campo{
+        background:linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+        border-radius:22px;
+        border:4px solid rgba(255,255,255,.22);
+        padding:16px;
+        min-height:560px;
+        position:relative;
+        overflow:hidden;
+        box-shadow:inset 0 0 0 2px rgba(255,255,255,.08);
+    }
+
+    .campo::before,
+    .campo::after{
+        content:"";
+        position:absolute;
+        inset:16px;
+        border:2px solid rgba(255,255,255,.22);
+        border-radius:18px;
+        pointer-events:none;
+    }
+
+    .campo::after{
+        inset:50% 16px auto 16px;
+        height:2px;
+        border:none;
+        background:rgba(255,255,255,.22);
+        transform:translateY(-1px);
+    }
+
+    .meio-campo{
+        position:absolute;
+        left:50%;
+        top:50%;
+        width:88px;
+        height:88px;
+        transform:translate(-50%,-50%);
+        border:2px solid rgba(255,255,255,.22);
+        border-radius:50%;
+        pointer-events:none;
+    }
+
+    .formacao{
+        position:relative;
+        z-index:2;
+        display:grid;
+        grid-template-rows:repeat(4, 1fr);
+        height:380px;
+        gap:12px;
+        margin-bottom:14px;
+    }
+
+    .linha-formacao{
+        display:grid;
+        gap:10px;
+        align-items:center;
+        justify-items:center;
+    }
+
+    .linha-4{ grid-template-columns:repeat(4,1fr); }
+    .linha-3{ grid-template-columns:repeat(3,1fr); }
+    .linha-2{ grid-template-columns:repeat(2,1fr); }
+    .linha-1{ grid-template-columns:1fr; }
+
+    .jogador{
+        width:100%;
+        min-width:0;
+        max-width:110px;
+        padding:10px 8px;
+        background:rgba(17,24,39,.88);
+        border:1px solid rgba(255,255,255,.16);
+        border-radius:14px;
+        text-align:center;
+        cursor:pointer;
+        transition:.22s ease;
+        box-shadow:0 8px 18px rgba(0,0,0,.18);
+    }
+
+    .jogador:hover{
+        transform:translateY(-2px) scale(1.03);
+        border-color:rgba(255,255,255,.35);
+    }
+
+    .jogador .nome{
+        display:block;
+        font-weight:700;
+        font-size:12px;
+        line-height:1.15;
+        margin-top:4px;
+    }
+
+    .jogador .num{
+        display:block;
+        font-size:11px;
+        opacity:.85;
+    }
+
+    .jogador.vazio{
+        background:rgba(255,255,255,.16);
+        color:#e5e7eb;
+        border-style:dashed;
+    }
+
+    .detalhes{
+        position:relative;
+        z-index:2;
+        background:rgba(2,6,23,.55);
+        border:1px solid rgba(255,255,255,.16);
+        border-radius:18px;
+        padding:14px;
+    }
+
+    .detalhes h3{
+        margin-bottom:10px;
+        font-size:18px;
+        color:#facc15;
+    }
+
+    .linha-inputs{
+        display:grid;
+        grid-template-columns:1.2fr .6fr .8fr;
+        gap:10px;
+        margin-bottom:10px;
+    }
+
+    .linha-inputs input,
+    .linha-inputs select{
+        width:100%;
+        padding:11px 12px;
+        border-radius:12px;
+        border:1px solid rgba(148,163,184,.24);
+        background:#0b1220;
+        color:#fff;
+        outline:none;
+    }
+
+    .acoes-jogador{
+        display:flex;
+        gap:10px;
+        flex-wrap:wrap;
+        margin-bottom:14px;
+    }
+
+    .lista{
+        display:grid;
+        gap:10px;
+    }
+
+    .caixa-lista{
+        background:rgba(15,23,42,.8);
+        border:1px solid rgba(148,163,184,.16);
+        border-radius:16px;
+        padding:12px;
+    }
+
+    .caixa-lista h4{
+        margin-bottom:10px;
+        color:#4ade80;
+        font-size:16px;
+    }
+
+    ul{
+        list-style:none;
+    }
+
+    li{
+        padding:8px 10px;
+        border-radius:10px;
+        background:#111827;
+        margin-bottom:8px;
+        display:flex;
+        justify-content:space-between;
+        gap:12px;
+        align-items:center;
+        cursor:pointer;
+        transition:.2s ease;
+    }
+
+    li:hover{
+        transform:translateX(3px);
+        background:#1f2937;
+    }
+
+    .mini{
+        opacity:.75;
+        font-size:12px;
+        white-space:nowrap;
+    }
+
+    .texto-ajuda{
+        font-size:13px;
+        opacity:.8;
+        line-height:1.4;
+        margin-top:6px;
+    }
+
+    .vazio-msg{
+        opacity:.85;
+        font-size:14px;
+        padding:8px 0 2px;
+    }
+
+    @media (max-width: 1300px){
+        .container{
+            grid-template-columns:1fr;
+        }
+
+        .direita{
+            position:static;
+        }
+    }
+
+    @media (max-width: 1100px){
+        .grupos{
+            grid-template-columns:repeat(2,1fr);
+        }
+    }
+
+    @media (max-width: 700px){
+        .grupos{
+            grid-template-columns:1fr;
+        }
+
+        .linha-inputs{
+            grid-template-columns:1fr;
+        }
+
+        .time-selecionado{
+            flex-direction:column;
+        }
+
+        .time-selecionado h2{
+            font-size:28px;
+        }
+
+        .campo{
+            min-height:620px;
+        }
+
+        .formacao{
+            height:420px;
+        }
+    }
 </style>
 </head>
-
 <body>
 
 <div class="topo">
@@ -164,88 +453,355 @@ li{
 </div>
 
 <div class="container">
+    <div class="painel esquerda">
+        <div class="barra-acoes">
+            <input type="text" id="pesquisa" placeholder="Pesquisar seleção..." oninput="filtrarSelecoes()">
+            <button class="btn btn-cinza" onclick="limparBusca()">Limpar</button>
+            <button class="btn btn-amarelo" onclick="sortearSelecao()">🎲 Sortear</button>
+        </div>
 
-    <!-- GRUPOS -->
-    <div class="grupos" id="grupos"></div>
-
-    <!-- LATERAL -->
-    <div class="info">
-        <h2 id="nomeTime">Selecione uma seleção</h2>
-
-        <h3 class="titulares">Informações</h3>
-        <ul id="titularesLista">
-            <li>Clique em uma seleção</li>
-        </ul>
-
-        <h3 class="banco">Observações</h3>
-        <ul id="bancoLista">
-            <li>Os grupos aparecem ao lado</li>
-        </ul>
+        <div class="titulo-sec">Seleções</div>
+        <div class="grupos" id="grupos"></div>
     </div>
 
+    <div class="painel direita">
+        <div class="time-selecionado">
+            <div>
+                <h2 id="nomeTime">Selecione uma seleção</h2>
+                <div class="texto-ajuda">Clique em um jogador do campo para editar. Você pode digitar o nome que quiser.</div>
+            </div>
+            <div class="tag-grupo" id="grupoTime">Sem grupo</div>
+        </div>
+
+        <div class="campo">
+            <div class="meio-campo"></div>
+
+            <div class="formacao" id="formacao"></div>
+
+            <div class="detalhes">
+                <h3>Editar jogador</h3>
+
+                <div class="linha-inputs">
+                    <input type="text" id="nomeJogador" placeholder="Nome do jogador">
+                    <input type="text" id="numeroJogador" placeholder="Número">
+                    <select id="tipoJogador">
+                        <option value="titular">Titular</option>
+                        <option value="banco">Banco</option>
+                    </select>
+                </div>
+
+                <div class="acoes-jogador">
+                    <button class="btn btn-verde" onclick="salvarJogador()">Salvar jogador</button>
+                    <button class="btn btn-azul" onclick="adicionarJogador()">Adicionar novo</button>
+                    <button class="btn btn-cinza" onclick="limparTime()">Limpar time</button>
+                </div>
+
+                <div class="lista">
+                    <div class="caixa-lista">
+                        <h4>Titulares</h4>
+                        <ul id="listaTitulares"></ul>
+                    </div>
+
+                    <div class="caixa-lista">
+                        <h4>Banco de reservas</h4>
+                        <ul id="listaBanco"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
 const gruposData = [
-    { nome: "GRUPO A", times: ["Canadá", "Japão", "Marrocos", "Noruega"] },
-    { nome: "GRUPO B", times: ["México", "Irã", "Egito", "Áustria"] },
-    { nome: "GRUPO C", times: ["Estados Unidos", "Austrália", "Argélia", "Bélgica"] },
-    { nome: "GRUPO D", times: ["Argentina", "Coreia do Sul", "Cabo Verde", "Croácia"] },
-    { nome: "GRUPO E", times: ["Brasil", "Qatar", "Congo DR", "Tchéquia"] },
-    { nome: "GRUPO F", times: ["Colômbia", "Arábia Saudita", "Tunísia", "Inglaterra"] },
-    { nome: "GRUPO G", times: ["Equador", "Jordânia", "Gana", "França"] },
-    { nome: "GRUPO H", times: ["Uruguai", "Uzbequistão", "Costa do Marfim", "Alemanha"] },
-    { nome: "GRUPO I", times: ["Paraguai", "África do Sul", "Senegal", "Países Baixos"] },
-    { nome: "GRUPO J", times: ["Nova Zelândia", "Panamá", "Bósnia e Herzegovina", "Portugal"] },
-    { nome: "GRUPO K", times: ["Curaçao", "Haiti", "Escócia", "Espanha"] },
-    { nome: "GRUPO L", times: ["Suíça", "Turquia", "Suécia", "Iraque"] }
+    { nome:"GRUPO A", times:["Brasil","México","Japão","Canadá"] },
+    { nome:"GRUPO B", times:["Argentina","França","Portugal","Alemanha"] },
+    { nome:"GRUPO C", times:["Inglaterra","Espanha","Itália","Holanda"] },
+    { nome:"GRUPO D", times:["Uruguai","Croácia","Bélgica","Estados Unidos"] },
+    { nome:"GRUPO E", times:["Marrocos","Senegal","Nigéria","Egito"] },
+    { nome:"GRUPO F", times:["Colômbia","Chile","Equador","Paraguai"] },
+    { nome:"GRUPO G", times:["Coreia do Sul","Irã","Austrália","Arábia Saudita"] },
+    { nome:"GRUPO H", times:["Suíça","Dinamarca","Polônia","Sérvia"] },
+    { nome:"GRUPO I", times:["Costa Rica","Tunísia","Gana","Camarões"] },
+    { nome:"GRUPO J", times:["Eslováquia","Escócia","Áustria","Noruega"] },
+    { nome:"GRUPO K", times:["Bósnia","Turquia","Suécia","República Tcheca"] },
+    { nome:"GRUPO L", times:["Jordânia","Uzbequistão","Nova Zelândia","Panamá"] }
 ];
 
-const timeParaGrupo = {};
+const posicoes = [
+    ["GOL"],
+    ["LE","ZAG","ZAG","LD"],
+    ["VOL","MEI","MEI"],
+    ["PE","CA","PD"]
+];
 
-function gerarGrupos(){
-    const gruposContainer = document.getElementById("grupos");
-    gruposContainer.innerHTML = "";
+const defaultRosters = {
+    "Brasil": {
+        titulares: [
+            { numero:"1", nome:"Alisson" },
+            { numero:"2", nome:"Danilo" },
+            { numero:"3", nome:"Marquinhos" },
+            { numero:"4", nome:"Militão" },
+            { numero:"6", nome:"Renan Lodi" },
+            { numero:"5", nome:"Casemiro" },
+            { numero:"8", nome:"Bruno Guimarães" },
+            { numero:"10", nome:"Neymar" },
+            { numero:"7", nome:"Vinicius Jr" },
+            { numero:"11", nome:"Rodrygo" },
+            { numero:"9", nome:"Endrick" }
+        ],
+        banco: [
+            { numero:"12", nome:"Bento" },
+            { numero:"14", nome:"Martinelli" },
+            { numero:"15", nome:"Bremer" }
+        ]
+    }
+};
 
-    gruposData.forEach(grupo => {
+let timeAtual = null;
+let selecionado = { tipo:null, indice:null };
+
+function getState(time){
+    const saved = localStorage.getItem("copa2026_" + time);
+    if(saved) return JSON.parse(saved);
+
+    const base = defaultRosters[time] || { titulares:[], banco:[] };
+    return {
+        titulares: base.titulares ? structuredClone(base.titulares) : [],
+        banco: base.banco ? structuredClone(base.banco) : []
+    };
+}
+
+function saveState(time, data){
+    localStorage.setItem("copa2026_" + time, JSON.stringify(data));
+}
+
+function gerarGrupos(listaFiltrada = null){
+    const container = document.getElementById("grupos");
+    container.innerHTML = "";
+
+    const data = listaFiltrada || gruposData;
+
+    data.forEach(grupo => {
         const bloco = document.createElement("div");
         bloco.className = "grupo";
 
-        const titulo = document.createElement("h2");
-        titulo.textContent = grupo.nome;
-        bloco.appendChild(titulo);
+        let html = `<h2>${grupo.nome}</h2>`;
 
         grupo.times.forEach(time => {
-            timeParaGrupo[time] = grupo.nome;
-
-            const item = document.createElement("div");
-            item.className = "time";
-            item.textContent = time;
-            item.addEventListener("click", () => mostrarTime(time));
-            bloco.appendChild(item);
+            const ativo = timeAtual === time ? "ativo" : "";
+            html += `
+                <div class="time ${ativo}" onclick="selecionarTime('${time}')">
+                    ⚽ <span>${time}</span>
+                </div>
+            `;
         });
 
-        gruposContainer.appendChild(bloco);
+        bloco.innerHTML = html;
+        container.appendChild(bloco);
     });
 }
 
-function mostrarTime(time){
-    const grupo = timeParaGrupo[time] || "Não encontrado";
+function selecionarTime(time){
+    timeAtual = time;
+    selecionado = { tipo:null, indice:null };
 
+    const grupo = gruposData.find(g => g.times.includes(time));
     document.getElementById("nomeTime").textContent = time;
+    document.getElementById("grupoTime").textContent = grupo ? grupo.nome : "Sem grupo";
 
-    document.getElementById("titularesLista").innerHTML = `
-        <li>Seleção: ${time}</li>
-        <li>Grupo: ${grupo}</li>
-    `;
+    document.getElementById("nomeJogador").value = "";
+    document.getElementById("numeroJogador").value = "";
+    document.getElementById("tipoJogador").value = "titular";
 
-    document.getElementById("bancoLista").innerHTML = `
-        <li>Classificada para a Copa do Mundo 2026</li>
-        <li>Os detalhes finais podem ser atualizados depois</li>
-    `;
+    renderizarTime();
+    gerarGrupos(document.getElementById("pesquisa").value.trim() ? filtrarDados() : null);
+}
+
+function renderizarTime(){
+    if(!timeAtual) return;
+
+    const state = getState(timeAtual);
+    const formacao = document.getElementById("formacao");
+    const titulares = state.titulares;
+    const banco = state.banco;
+
+    let html = "";
+
+    const mapaListras = [
+        ["linha-formacao linha-1", 1, 0],
+        ["linha-formacao linha-4", 4, 1],
+        ["linha-formacao linha-3", 3, 5],
+        ["linha-formacao linha-3", 3, 8]
+    ];
+
+    let idx = 0;
+    mapaListras.forEach(([classe, qtde], linhaIndex) => {
+        html += `<div class="${classe}">`;
+        for(let i=0;i<qtde;i++){
+            const jogador = titulares[idx];
+            const nome = jogador?.nome || "Adicionar";
+            const numero = jogador?.numero || "--";
+            html += `
+                <div class="jogador ${jogador ? "" : "vazio"}" onclick="editarSlot('titular', ${idx})">
+                    <span class="num">${numero}</span>
+                    <span class="nome">${nome}</span>
+                </div>
+            `;
+            idx++;
+        }
+        html += `</div>`;
+    });
+
+    formacao.innerHTML = html;
+
+    const listaTitulares = document.getElementById("listaTitulares");
+    const listaBanco = document.getElementById("listaBanco");
+
+    listaTitulares.innerHTML = titulares.length
+        ? titulares.map((j, i) => `
+            <li onclick="editarSlot('titular', ${i})">
+                <span>${j.numero} - ${j.nome}</span>
+                <span class="mini">editar</span>
+            </li>
+        `).join("")
+        : `<div class="vazio-msg">Nenhum titular adicionado ainda.</div>`;
+
+    listaBanco.innerHTML = banco.length
+        ? banco.map((j, i) => `
+            <li onclick="editarSlot('banco', ${i})">
+                <span>${j.numero} - ${j.nome}</span>
+                <span class="mini">editar</span>
+            </li>
+        `).join("")
+        : `<div class="vazio-msg">Nenhum jogador no banco ainda.</div>`;
+}
+
+function editarSlot(tipo, indice){
+    if(!timeAtual) return;
+
+    const state = getState(timeAtual);
+    const lista = state[tipo];
+    const jogador = lista[indice];
+
+    selecionado = { tipo, indice };
+
+    document.getElementById("tipoJogador").value = tipo;
+
+    if(jogador){
+        document.getElementById("nomeJogador").value = jogador.nome;
+        document.getElementById("numeroJogador").value = jogador.numero;
+    }else{
+        document.getElementById("nomeJogador").value = "";
+        document.getElementById("numeroJogador").value = "";
+    }
+}
+
+function salvarJogador(){
+    if(!timeAtual){
+        alert("Selecione uma seleção primeiro.");
+        return;
+    }
+
+    const nome = document.getElementById("nomeJogador").value.trim();
+    const numero = document.getElementById("numeroJogador").value.trim();
+    const tipo = document.getElementById("tipoJogador").value;
+
+    if(!nome){
+        alert("Digite o nome do jogador.");
+        return;
+    }
+
+    const state = getState(timeAtual);
+
+    if(selecionado.tipo && selecionado.indice !== null && tipo === selecionado.tipo){
+        state[tipo][selecionado.indice] = { nome, numero };
+    }else{
+        if(tipo === "titular"){
+            if(state.titulares.length >= 11){
+                alert("O time já tem 11 titulares. Edite um slot ou mova para o banco.");
+                return;
+            }
+            state.titulares.push({ nome, numero });
+        }else{
+            state.banco.push({ nome, numero });
+        }
+    }
+
+    saveState(timeAtual, state);
+    renderizarTime();
+
+    selecionado = { tipo:null, indice:null };
+    document.getElementById("nomeJogador").value = "";
+    document.getElementById("numeroJogador").value = "";
+}
+
+function adicionarJogador(){
+    if(!timeAtual){
+        alert("Selecione uma seleção primeiro.");
+        return;
+    }
+
+    const tipo = document.getElementById("tipoJogador").value;
+    const nome = document.getElementById("nomeJogador").value.trim();
+    const numero = document.getElementById("numeroJogador").value.trim();
+
+    if(!nome){
+        alert("Digite o nome do jogador.");
+        return;
+    }
+
+    const state = getState(timeAtual);
+
+    if(tipo === "titular" && state.titulares.length >= 11){
+        alert("Já existem 11 titulares. Clique em um slot para editar.");
+        return;
+    }
+
+    state[tipo].push({ nome, numero });
+    saveState(timeAtual, state);
+    renderizarTime();
+
+    document.getElementById("nomeJogador").value = "";
+    document.getElementById("numeroJogador").value = "";
+}
+
+function limparTime(){
+    if(!timeAtual) return;
+    if(!confirm("Quer apagar a escalação dessa seleção?")) return;
+
+    localStorage.removeItem("copa2026_" + timeAtual);
+    renderizarTime();
+}
+
+function filtrarDados(){
+    const termo = document.getElementById("pesquisa").value.trim().toLowerCase();
+
+    if(!termo) return null;
+
+    return gruposData.map(grupo => ({
+        nome: grupo.nome,
+        times: grupo.times.filter(time => time.toLowerCase().includes(termo))
+    })).filter(grupo => grupo.times.length > 0);
+}
+
+function filtrarSelecoes(){
+    gerarGrupos(filtrarDados());
+}
+
+function limparBusca(){
+    document.getElementById("pesquisa").value = "";
+    gerarGrupos();
+}
+
+function sortearSelecao(){
+    const todas = gruposData.flatMap(g => g.times);
+    const sorteada = todas[Math.floor(Math.random() * todas.length)];
+    selecionarTime(sorteada);
 }
 
 gerarGrupos();
+selecionarTime("Brasil");
 </script>
 
 </body>
