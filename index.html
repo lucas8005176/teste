@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Copa do Mundo 2026</title>
 
 <style>
@@ -62,6 +61,7 @@ body{
     border-radius:15px;
     padding:15px;
     transition:0.3s;
+    min-height:260px;
 }
 
 .grupo:hover{
@@ -73,6 +73,7 @@ body{
     text-align:center;
     margin-bottom:15px;
     color:#38bdf8;
+    font-size:22px;
 }
 
 .time{
@@ -82,11 +83,13 @@ body{
     border-radius:10px;
     cursor:pointer;
     transition:0.3s;
+    border:1px solid transparent;
 }
 
 .time:hover{
     background:#16a34a;
     transform:scale(1.03);
+    border-color:#22c55e;
 }
 
 /* LATERAL */
@@ -163,290 +166,86 @@ li{
 <div class="container">
 
     <!-- GRUPOS -->
-    <div class="grupos">
-
-        <!-- GRUPO A -->
-        <div class="grupo">
-            <h2>GRUPO A</h2>
-            <div class="time" onclick="mostrarTime('Brasil')">🇧🇷 Brasil</div>
-            <div class="time" onclick="mostrarTime('México')">🇲🇽 México</div>
-            <div class="time" onclick="mostrarTime('Japão')">🇯🇵 Japão</div>
-            <div class="time" onclick="mostrarTime('Canadá')">🇨🇦 Canadá</div>
-        </div>
-
-        <!-- GRUPO B -->
-        <div class="grupo">
-            <h2>GRUPO B</h2>
-            <div class="time" onclick="mostrarTime('Argentina')">🇦🇷 Argentina</div>
-            <div class="time" onclick="mostrarTime('França')">🇫🇷 França</div>
-            <div class="time" onclick="mostrarTime('Portugal')">🇵🇹 Portugal</div>
-            <div class="time" onclick="mostrarTime('Alemanha')">🇩🇪 Alemanha</div>
-        </div>
-
-        <!-- GRUPO C -->
-        <div class="grupo">
-            <h2>GRUPO C</h2>
-            <div class="time" onclick="mostrarTime('Inglaterra')">🏴 Inglaterra</div>
-            <div class="time" onclick="mostrarTime('Espanha')">🇪🇸 Espanha</div>
-            <div class="time" onclick="mostrarTime('Itália')">🇮🇹 Itália</div>
-            <div class="time" onclick="mostrarTime('Holanda')">🇳🇱 Holanda</div>
-        </div>
-
-        <!-- GRUPO D -->
-        <div class="grupo">
-            <h2>GRUPO D</h2>
-            <div class="time" onclick="mostrarTime('Uruguai')">🇺🇾 Uruguai</div>
-            <div class="time" onclick="mostrarTime('Croácia')">🇭🇷 Croácia</div>
-            <div class="time" onclick="mostrarTime('Bélgica')">🇧🇪 Bélgica</div>
-            <div class="time" onclick="mostrarTime('Estados Unidos')">🇺🇸 Estados Unidos</div>
-        </div>
-
-    </div>
+    <div class="grupos" id="grupos"></div>
 
     <!-- LATERAL -->
     <div class="info">
-        <h2 id="nomeTime">Selecione um time</h2>
+        <h2 id="nomeTime">Selecione uma seleção</h2>
 
-        <h3 class="titulares">Titulares</h3>
+        <h3 class="titulares">Informações</h3>
         <ul id="titularesLista">
             <li>Clique em uma seleção</li>
         </ul>
 
-        <h3 class="banco">Banco de Reservas</h3>
+        <h3 class="banco">Observações</h3>
         <ul id="bancoLista">
-            <li>Jogadores aparecerão aqui</li>
+            <li>Os grupos aparecem ao lado</li>
         </ul>
     </div>
 
 </div>
 
 <script>
-const selecoes = {
-    "Brasil":{
-        titulares:[
-            "1 - Alisson",
-            "2 - Danilo",
-            "3 - Marquinhos",
-            "4 - Militão",
-            "5 - Casemiro",
-            "7 - Vinicius Jr",
-            "8 - Bruno Guimarães",
-            "9 - Rodrygo",
-            "10 - Neymar"
-        ],
-        banco:[
-            "12 - Bento",
-            "14 - Martinelli",
-            "15 - Endrick"
-        ]
-    },
+const gruposData = [
+    { nome: "GRUPO A", times: ["Canadá", "Japão", "Marrocos", "Noruega"] },
+    { nome: "GRUPO B", times: ["México", "Irã", "Egito", "Áustria"] },
+    { nome: "GRUPO C", times: ["Estados Unidos", "Austrália", "Argélia", "Bélgica"] },
+    { nome: "GRUPO D", times: ["Argentina", "Coreia do Sul", "Cabo Verde", "Croácia"] },
+    { nome: "GRUPO E", times: ["Brasil", "Qatar", "Congo DR", "Tchéquia"] },
+    { nome: "GRUPO F", times: ["Colômbia", "Arábia Saudita", "Tunísia", "Inglaterra"] },
+    { nome: "GRUPO G", times: ["Equador", "Jordânia", "Gana", "França"] },
+    { nome: "GRUPO H", times: ["Uruguai", "Uzbequistão", "Costa do Marfim", "Alemanha"] },
+    { nome: "GRUPO I", times: ["Paraguai", "África do Sul", "Senegal", "Países Baixos"] },
+    { nome: "GRUPO J", times: ["Nova Zelândia", "Panamá", "Bósnia e Herzegovina", "Portugal"] },
+    { nome: "GRUPO K", times: ["Curaçao", "Haiti", "Escócia", "Espanha"] },
+    { nome: "GRUPO L", times: ["Suíça", "Turquia", "Suécia", "Iraque"] }
+];
 
-    "Argentina":{
-        titulares:[
-            "1 - Martínez",
-            "5 - De Paul",
-            "7 - Di María",
-            "9 - Julián Álvarez",
-            "10 - Messi"
-        ],
-        banco:[
-            "14 - Enzo Fernández",
-            "15 - Garnacho"
-        ]
-    },
+const timeParaGrupo = {};
 
-    "França":{
-        titulares:[
-            "1 - Maignan",
-            "7 - Griezmann",
-            "9 - Giroud",
-            "10 - Mbappé"
-        ],
-        banco:[
-            "14 - Coman",
-            "15 - Dembélé"
-        ]
-    },
+function gerarGrupos(){
+    const gruposContainer = document.getElementById("grupos");
+    gruposContainer.innerHTML = "";
 
-    "Portugal":{
-        titulares:[
-            "1 - Diogo Costa",
-            "5 - Bruno Fernandes",
-            "7 - Cristiano Ronaldo",
-            "8 - Bernardo Silva"
-        ],
-        banco:[
-            "14 - João Félix",
-            "15 - Vitinha"
-        ]
-    },
+    gruposData.forEach(grupo => {
+        const bloco = document.createElement("div");
+        bloco.className = "grupo";
 
-    "Alemanha":{
-        titulares:[
-            "1 - Neuer",
-            "6 - Kimmich",
-            "10 - Musiala"
-        ],
-        banco:[
-            "14 - Müller",
-            "15 - Sané"
-        ]
-    },
+        const titulo = document.createElement("h2");
+        titulo.textContent = grupo.nome;
+        bloco.appendChild(titulo);
 
-    "Inglaterra":{
-        titulares:[
-            "1 - Pickford",
-            "7 - Saka",
-            "9 - Kane",
-            "10 - Bellingham"
-        ],
-        banco:[
-            "14 - Foden",
-            "15 - Rashford"
-        ]
-    },
+        grupo.times.forEach(time => {
+            timeParaGrupo[time] = grupo.nome;
 
-    "Espanha":{
-        titulares:[
-            "1 - Unai Simón",
-            "6 - Gavi",
-            "8 - Pedri"
-        ],
-        banco:[
-            "14 - Ferran Torres",
-            "15 - Yamal"
-        ]
-    },
+            const item = document.createElement("div");
+            item.className = "time";
+            item.textContent = time;
+            item.addEventListener("click", () => mostrarTime(time));
+            bloco.appendChild(item);
+        });
 
-    "Itália":{
-        titulares:[
-            "1 - Donnarumma",
-            "6 - Barella",
-            "10 - Chiesa"
-        ],
-        banco:[
-            "14 - Jorginho",
-            "15 - El Shaarawy"
-        ]
-    },
-
-    "Holanda":{
-        titulares:[
-            "1 - Verbruggen",
-            "4 - Van Dijk",
-            "10 - Depay"
-        ],
-        banco:[
-            "14 - Gakpo",
-            "15 - Simons"
-        ]
-    },
-
-    "Uruguai":{
-        titulares:[
-            "1 - Rochet",
-            "9 - Darwin Núñez",
-            "15 - Valverde"
-        ],
-        banco:[
-            "16 - Pellistri",
-            "17 - Arrascaeta"
-        ]
-    },
-
-    "Croácia":{
-        titulares:[
-            "1 - Livakovic",
-            "10 - Modric"
-        ],
-        banco:[
-            "14 - Brozovic",
-            "15 - Perisic"
-        ]
-    },
-
-    "Bélgica":{
-        titulares:[
-            "1 - Courtois",
-            "10 - De Bruyne"
-        ],
-        banco:[
-            "14 - Trossard",
-            "15 - Lukaku"
-        ]
-    },
-
-    "Estados Unidos":{
-        titulares:[
-            "1 - Turner",
-            "10 - Pulisic"
-        ],
-        banco:[
-            "14 - Reyna",
-            "15 - Weah"
-        ]
-    },
-
-    "Japão":{
-        titulares:[
-            "1 - Suzuki",
-            "10 - Minamino"
-        ],
-        banco:[
-            "14 - Kubo",
-            "15 - Endo"
-        ]
-    },
-
-    "Canadá":{
-        titulares:[
-            "1 - Crépeau",
-            "10 - Davies"
-        ],
-        banco:[
-            "14 - David",
-            "15 - Buchanan"
-        ]
-    },
-
-    "México":{
-        titulares:[
-            "1 - Ochoa",
-            "10 - Lozano"
-        ],
-        banco:[
-            "14 - Álvarez",
-            "15 - Giménez"
-        ]
-    }
-};
+        gruposContainer.appendChild(bloco);
+    });
+}
 
 function mostrarTime(time){
-    const timeSelecionado = selecoes[time];
+    const grupo = timeParaGrupo[time] || "Não encontrado";
 
-    if(!timeSelecionado){
-        document.getElementById("nomeTime").innerHTML = "Time não encontrado";
-        document.getElementById("titularesLista").innerHTML = "<li>Sem dados</li>";
-        document.getElementById("bancoLista").innerHTML = "<li>Sem dados</li>";
-        return;
-    }
+    document.getElementById("nomeTime").textContent = time;
 
-    document.getElementById("nomeTime").innerHTML = time;
+    document.getElementById("titularesLista").innerHTML = `
+        <li>Seleção: ${time}</li>
+        <li>Grupo: ${grupo}</li>
+    `;
 
-    let titularesHTML = "";
-    let bancoHTML = "";
-
-    timeSelecionado.titulares.forEach(jogador => {
-        titularesHTML += `<li>${jogador}</li>`;
-    });
-
-    timeSelecionado.banco.forEach(jogador => {
-        bancoHTML += `<li>${jogador}</li>`;
-    });
-
-    document.getElementById("titularesLista").innerHTML = titularesHTML;
-    document.getElementById("bancoLista").innerHTML = bancoHTML;
+    document.getElementById("bancoLista").innerHTML = `
+        <li>Classificada para a Copa do Mundo 2026</li>
+        <li>Os detalhes finais podem ser atualizados depois</li>
+    `;
 }
+
+gerarGrupos();
 </script>
 
 </body>
