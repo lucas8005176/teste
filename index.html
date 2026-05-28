@@ -12,18 +12,51 @@
         font-family:Arial, sans-serif;
     }
 
+    :root{
+        --azul:#38bdf8;
+        --verde:#22c55e;
+        --amarelo:#facc15;
+        --fundo:#020617;
+    }
+
     body{
         min-height:100vh;
         background:
-            radial-gradient(circle at top, #0f172a 0%, #020617 55%);
+            radial-gradient(circle at top, #0f172a 0%, var(--fundo) 55%);
         color:#fff;
         padding:20px;
         overflow-x:hidden;
+        position:relative;
+    }
+
+    body::before,
+    body::after{
+        content:"";
+        position:fixed;
+        inset:-20%;
+        pointer-events:none;
+        z-index:-1;
+    }
+
+    body::before{
+        background:
+            radial-gradient(circle at 20% 20%, rgba(56,189,248,.10), transparent 24%),
+            radial-gradient(circle at 80% 30%, rgba(168,85,247,.10), transparent 22%),
+            radial-gradient(circle at 50% 80%, rgba(34,197,94,.10), transparent 24%);
+        animation:flutuarFundo 14s ease-in-out infinite alternate;
+    }
+
+    body::after{
+        background-image: radial-gradient(rgba(255,255,255,.18) 1px, transparent 1px);
+        background-size: 28px 28px;
+        opacity:.13;
+        animation: estrelas 16s linear infinite;
     }
 
     .topo{
         text-align:center;
         margin-bottom:20px;
+        animation: aparecer .8s ease both;
     }
 
     .topo h1{
@@ -31,6 +64,7 @@
         font-weight:800;
         text-shadow:0 0 18px rgba(56,189,248,.55);
         margin-bottom:14px;
+        animation:pulsarTitulo 2.8s ease-in-out infinite;
     }
 
     .linha{
@@ -39,6 +73,8 @@
         border-radius:999px;
         background:linear-gradient(90deg,#22c55e,#3b82f6,#a855f7,#ef4444,#facc15);
         box-shadow:0 0 12px rgba(56,189,248,.35);
+        background-size:300% 100%;
+        animation:gradiente 5s linear infinite;
     }
 
     .container{
@@ -54,6 +90,7 @@
         border-radius:24px;
         box-shadow:0 20px 50px rgba(0,0,0,.28);
         backdrop-filter: blur(10px);
+        animation: subir .7s ease both;
     }
 
     .esquerda{
@@ -85,31 +122,23 @@
         cursor:pointer;
         font-weight:700;
         transition:.25s ease;
+        position:relative;
+        overflow:hidden;
     }
 
     .btn:hover{
         transform:translateY(-2px);
+        filter:brightness(1.05);
     }
 
-    .btn-azul{
-        background:#2563eb;
-        color:#fff;
+    .btn:active{
+        transform:translateY(0) scale(.98);
     }
 
-    .btn-verde{
-        background:#16a34a;
-        color:#fff;
-    }
-
-    .btn-amarelo{
-        background:#f59e0b;
-        color:#111827;
-    }
-
-    .btn-cinza{
-        background:#334155;
-        color:#fff;
-    }
+    .btn-azul{ background:#2563eb; color:#fff; }
+    .btn-verde{ background:#16a34a; color:#fff; }
+    .btn-amarelo{ background:#f59e0b; color:#111827; }
+    .btn-cinza{ background:#334155; color:#fff; }
 
     .titulo-sec{
         color:#38bdf8;
@@ -131,6 +160,9 @@
         padding:14px;
         min-height:230px;
         transition:.25s ease;
+        animation: aparecer .5s ease both;
+        transform-style:preserve-3d;
+        perspective:1000px;
     }
 
     .grupo:hover{
@@ -146,30 +178,94 @@
         margin-bottom:12px;
     }
 
-    .time{
-        background:#111827;
-        border:1px solid rgba(148,163,184,.14);
-        border-radius:14px;
-        padding:11px 12px;
+    .time-wrap{
+        perspective:1000px;
         margin-bottom:8px;
+    }
+
+    .time{
+        width:100%;
+        min-height:72px;
+        border:none;
+        background:none;
+        padding:0;
         cursor:pointer;
-        display:flex;
-        align-items:center;
-        gap:8px;
-        transition:.2s ease;
+        position:relative;
+        transform-style:preserve-3d;
+        transition:transform .7s ease;
         user-select:none;
     }
 
-    .time:hover{
-        background:#14532d;
-        border-color:#22c55e;
-        transform:scale(1.02);
+    .time.virado{
+        transform:rotateY(180deg);
     }
 
-    .time.ativo{
+    .time-card{
+        position:relative;
+        width:100%;
+        min-height:72px;
+        transform-style:preserve-3d;
+    }
+
+    .time-face{
+        position:absolute;
+        inset:0;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+        border-radius:14px;
+        padding:11px 12px;
+        backface-visibility:hidden;
+        border:1px solid rgba(148,163,184,.14);
+        box-shadow:0 10px 18px rgba(0,0,0,.16);
+    }
+
+    .time-front{
+        background:#111827;
+    }
+
+    .time-back{
+        background:linear-gradient(135deg,#2563eb,#22c55e);
+        transform:rotateY(180deg);
+        color:#fff;
+        flex-direction:column;
+        gap:4px;
+        text-align:center;
+    }
+
+    .time:hover .time-front{
+        background:#14532d;
+        border-color:#22c55e;
+    }
+
+    .time.ativo .time-front{
         background:#1d4ed8;
         border-color:#60a5fa;
         box-shadow:0 0 12px rgba(59,130,246,.35);
+        animation: brilhoAtivo 1.6s ease-in-out infinite, pulsarSelecao 1.4s ease-in-out infinite;
+    }
+
+    .icone-time{ display:inline-block; }
+
+    .placar-mini{
+        font-size:20px;
+        font-weight:900;
+    }
+
+    .placar-mini-texto{
+        font-size:12px;
+        opacity:.95;
+    }
+
+    .ripple{
+        position:absolute;
+        border-radius:50%;
+        transform:scale(0);
+        background:rgba(255,255,255,.35);
+        animation:ripple .65s ease-out;
+        pointer-events:none;
+        z-index:4;
     }
 
     .direita{
@@ -190,6 +286,7 @@
         font-size:34px;
         color:#38bdf8;
         line-height:1;
+        animation: aparecer .5s ease both;
     }
 
     .tag-grupo{
@@ -199,6 +296,58 @@
         border:1px solid rgba(96,165,250,.25);
         font-size:13px;
         white-space:nowrap;
+    }
+
+    .placar{
+        margin-bottom:14px;
+        padding:14px;
+        border-radius:18px;
+        background:rgba(2,6,23,.55);
+        border:1px solid rgba(255,255,255,.14);
+    }
+
+    .placar h3{
+        margin-bottom:10px;
+        color:#facc15;
+        font-size:18px;
+    }
+
+    .placar-linha{
+        display:grid;
+        grid-template-columns:1.4fr .6fr .6fr auto;
+        gap:10px;
+        align-items:center;
+    }
+
+    .placar-linha input{
+        width:100%;
+        padding:11px 12px;
+        border-radius:12px;
+        border:1px solid rgba(148,163,184,.24);
+        background:#0b1220;
+        color:#fff;
+        outline:none;
+    }
+
+    .placar-box{
+        margin-top:10px;
+        display:flex;
+        justify-content:space-between;
+        gap:12px;
+        align-items:center;
+        flex-wrap:wrap;
+        color:#e2e8f0;
+    }
+
+    .placar-box strong{
+        color:#fff;
+        font-size:18px;
+        display:inline-block;
+        animation: placarPulse 1.2s ease-in-out infinite;
+    }
+
+    .placar-box strong.animando{
+        animation: placarTroca .35s ease;
     }
 
     .campo{
@@ -283,11 +432,24 @@
         flex-direction:column;
         align-items:center;
         gap:6px;
+        position:relative;
+        overflow:hidden;
+        animation: aparecer .45s ease both;
     }
 
     .jogador:hover{
         transform:translateY(-2px) scale(1.03);
         border-color:rgba(255,255,255,.35);
+        box-shadow:0 0 18px rgba(255,255,255,.08);
+    }
+
+    .jogador:active{
+        transform:scale(.96);
+    }
+
+    .jogador.selecionado-jogador{
+        outline:2px solid rgba(250,204,21,.8);
+        box-shadow:0 0 16px rgba(250,204,21,.22);
     }
 
     .foto-jogador{
@@ -358,7 +520,8 @@
     .linha-inputs input,
     .linha-inputs select,
     .linha-fundo input,
-    .linha-foto input{
+    .linha-foto input,
+    .placar-linha input{
         width:100%;
         padding:11px 12px;
         border-radius:12px;
@@ -437,9 +600,7 @@
         font-size:16px;
     }
 
-    ul{
-        list-style:none;
-    }
+    ul{ list-style:none; }
 
     li{
         padding:8px 10px;
@@ -478,51 +639,85 @@
         padding:8px 0 2px;
     }
 
-    @media (max-width: 1300px){
-        .container{
-            grid-template-columns:1fr;
-        }
+    @keyframes aparecer{
+        from{ opacity:0; transform:translateY(18px); }
+        to{ opacity:1; transform:translateY(0); }
+    }
 
-        .direita{
-            position:static;
+    @keyframes subir{
+        from{ opacity:0; transform:translateY(20px) scale(.985); }
+        to{ opacity:1; transform:translateY(0) scale(1); }
+    }
+
+    @keyframes pulsarTitulo{
+        0%,100%{ transform:scale(1); text-shadow:0 0 18px rgba(56,189,248,.55); }
+        50%{ transform:scale(1.02); text-shadow:0 0 26px rgba(56,189,248,.85); }
+    }
+
+    @keyframes gradiente{
+        from{ background-position:0% 50%; }
+        to{ background-position:100% 50%; }
+    }
+
+    @keyframes flutuarFundo{
+        from{ transform:translate3d(0,0,0) scale(1); }
+        to{ transform:translate3d(2%,1%,0) scale(1.03); }
+    }
+
+    @keyframes estrelas{
+        from{ transform:translateY(0); }
+        to{ transform:translateY(28px); }
+    }
+
+    @keyframes brilhoAtivo{
+        0%,100%{ box-shadow:0 0 12px rgba(59,130,246,.35); }
+        50%{ box-shadow:0 0 20px rgba(59,130,246,.55); }
+    }
+
+    @keyframes pulsarSelecao{
+        0%,100%{ box-shadow:0 0 12px rgba(59,130,246,.35); }
+        50%{ box-shadow:0 0 24px rgba(59,130,246,.7); }
+    }
+
+    @keyframes ripple{
+        to{
+            transform:scale(18);
+            opacity:0;
         }
+    }
+
+    @keyframes placarPulse{
+        0%,100%{ transform:scale(1); }
+        50%{ transform:scale(1.03); }
+    }
+
+    @keyframes placarTroca{
+        0%{ transform:translateY(0) scale(1); opacity:1; }
+        50%{ transform:translateY(-4px) scale(1.08); opacity:.7; }
+        100%{ transform:translateY(0) scale(1); opacity:1; }
+    }
+
+    @media (max-width: 1300px){
+        .container{ grid-template-columns:1fr; }
+        .direita{ position:static; }
     }
 
     @media (max-width: 1100px){
-        .grupos{
-            grid-template-columns:repeat(2,1fr);
-        }
+        .grupos{ grid-template-columns:repeat(2,1fr); }
+        .placar-linha{ grid-template-columns:1fr 1fr; }
+        .placar-linha button{ grid-column:1 / -1; }
     }
 
     @media (max-width: 700px){
-        .grupos{
-            grid-template-columns:1fr;
-        }
-
-        .linha-inputs{
-            grid-template-columns:1fr;
-        }
-
+        .grupos{ grid-template-columns:1fr; }
+        .linha-inputs{ grid-template-columns:1fr; }
         .linha-foto,
-        .linha-fundo{
-            grid-template-columns:1fr;
-        }
-
-        .time-selecionado{
-            flex-direction:column;
-        }
-
-        .time-selecionado h2{
-            font-size:28px;
-        }
-
-        .campo{
-            min-height:620px;
-        }
-
-        .formacao{
-            height:420px;
-        }
+        .linha-fundo{ grid-template-columns:1fr; }
+        .time-selecionado{ flex-direction:column; }
+        .time-selecionado h2{ font-size:28px; }
+        .campo{ min-height:620px; }
+        .formacao{ height:420px; }
+        .placar-linha{ grid-template-columns:1fr; }
     }
 </style>
 </head>
@@ -554,9 +749,22 @@
             <div class="tag-grupo" id="grupoTime">Sem grupo</div>
         </div>
 
+        <div class="placar">
+            <h3>Placar</h3>
+            <div class="placar-linha">
+                <input type="text" id="adversario" placeholder="Adversário">
+                <input type="number" id="golsTime" placeholder="Gols da seleção" min="0">
+                <input type="number" id="golsAdversario" placeholder="Gols do adversário" min="0">
+                <button class="btn btn-verde" onclick="salvarPlacar()">Salvar placar</button>
+            </div>
+            <div class="placar-box">
+                <span>Resultado:</span>
+                <strong id="placarResumo">0 x 0</strong>
+            </div>
+        </div>
+
         <div class="campo" id="campo">
             <div class="meio-campo"></div>
-
             <div class="formacao" id="formacao"></div>
 
             <div class="detalhes">
@@ -639,14 +847,16 @@ const defaultRosters = {
             { numero:"12", nome:"Bento" },
             { numero:"14", nome:"Martinelli" },
             { numero:"15", nome:"Bremer" }
-        ]
+        ],
+        placar: { adversario:"", golsTime:0, golsAdversario:0 }
     }
 };
 
 let timeAtual = null;
 let selecionado = { tipo:null, indice:null };
 let fotoAtual = "";
-let fundoCampoAtual = "";
+let timeVirado = new Set();
+let audioContext = null;
 
 function criarTitularesVazios(){
     return Array.from({ length: 11 }, () => null);
@@ -663,7 +873,12 @@ function normalizarState(state){
     return {
         titulares,
         banco: Array.isArray(state.banco) ? state.banco : [],
-        campoFundo: typeof state.campoFundo === "string" ? state.campoFundo : ""
+        campoFundo: typeof state.campoFundo === "string" ? state.campoFundo : "",
+        placar: {
+            adversario: state.placar?.adversario || "",
+            golsTime: Number.isFinite(Number(state.placar?.golsTime)) ? Number(state.placar.golsTime) : 0,
+            golsAdversario: Number.isFinite(Number(state.placar?.golsAdversario)) ? Number(state.placar.golsAdversario) : 0
+        }
     };
 }
 
@@ -673,11 +888,11 @@ function getState(time){
         try{
             return normalizarState(JSON.parse(saved));
         }catch(e){
-            return normalizarState({ titulares: [], banco: [], campoFundo: "" });
+            return normalizarState({ titulares: [], banco: [], campoFundo: "", placar: {} });
         }
     }
 
-    const base = defaultRosters[time] || { titulares: [], banco: [] };
+    const base = defaultRosters[time] || { titulares: [], banco: [], placar: {} };
     const titulares = criarTitularesVazios();
     if(base.titulares){
         base.titulares.forEach((jogador, i) => {
@@ -688,7 +903,8 @@ function getState(time){
     return {
         titulares,
         banco: base.banco ? structuredClone(base.banco) : [],
-        campoFundo: ""
+        campoFundo: "",
+        placar: structuredClone(base.placar || { adversario:"", golsTime:0, golsAdversario:0 })
     };
 }
 
@@ -700,15 +916,66 @@ function atualizarCampoFundo(fundo){
     const campo = document.getElementById("campo");
     const preview = document.getElementById("previewFundoCampo");
 
-    fundoCampoAtual = fundo || "";
-
-    if(fundoCampoAtual){
-        campo.style.backgroundImage = `linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.18)), url('${fundoCampoAtual}')`;
+    if(fundo){
+        campo.style.backgroundImage = `linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.18)), url('${fundo}')`;
         preview.textContent = "Fundo aplicado";
     }else{
         campo.style.backgroundImage = "linear-gradient(180deg, #22c55e 0%, #16a34a 100%)";
         preview.textContent = "Fundo do campo";
     }
+}
+
+function criarEfeitoClique(elemento, event){
+    if(!elemento || !event) return;
+    const rect = elemento.getBoundingClientRect();
+    const ripple = document.createElement("span");
+    ripple.className = "ripple";
+    ripple.style.left = `${event.clientX - rect.left}px`;
+    ripple.style.top = `${event.clientY - rect.top}px`;
+    ripple.style.width = ripple.style.height = `${Math.max(rect.width, rect.height) * 0.45}px`;
+    elemento.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 700);
+}
+
+function tocarSomGol(){
+    try{
+        if(!audioContext){
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        if(audioContext.state === "suspended"){
+            audioContext.resume();
+        }
+
+        const now = audioContext.currentTime;
+        const gain = audioContext.createGain();
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.35, now + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.7);
+        gain.connect(audioContext.destination);
+
+        const freqs = [220, 330, 440, 660];
+        freqs.forEach((freq, i) => {
+            const osc = audioContext.createOscillator();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(freq, now + i * 0.08);
+            osc.connect(gain);
+            osc.start(now + i * 0.08);
+            osc.stop(now + 0.7);
+        });
+    }catch(err){
+        console.warn("Não foi possível tocar o som de gol.", err);
+    }
+}
+
+function virarCard(time){
+    const estadoAtual = timeVirado.has(time);
+    if(estadoAtual){
+        timeVirado.delete(time);
+    }else{
+        timeVirado.add(time);
+    }
+    gerarGrupos(document.getElementById("pesquisa").value.trim() ? filtrarDados() : null);
 }
 
 function gerarGrupos(listaFiltrada = null){
@@ -724,10 +991,27 @@ function gerarGrupos(listaFiltrada = null){
         let html = `<h2>${grupo.nome}</h2>`;
 
         grupo.times.forEach(time => {
+            const state = getState(time);
             const ativo = timeAtual === time ? "ativo" : "";
+            const virado = timeVirado.has(time) ? "virado" : "";
+            const golsTime = state.placar?.golsTime ?? 0;
+            const golsAdversario = state.placar?.golsAdversario ?? 0;
+            const adversario = state.placar?.adversario || "Sem jogo";
+
             html += `
-                <div class="time ${ativo}" onclick="selecionarTime('${time}')">
-                    ⚽ <span>${time}</span>
+                <div class="time-wrap">
+                    <button class="time ${ativo} ${virado}" onclick="virarCard('${time}'); selecionarTime('${time}', event)">
+                        <div class="time-card">
+                            <div class="time-face time-front">
+                                <span class="icone-time">⚽</span>
+                                <span>${time}</span>
+                            </div>
+                            <div class="time-face time-back">
+                                <div class="placar-mini">${golsTime} x ${golsAdversario}</div>
+                                <div class="placar-mini-texto">${adversario}</div>
+                            </div>
+                        </div>
+                    </button>
                 </div>
             `;
         });
@@ -757,7 +1041,27 @@ function limparCampos(){
     atualizarPreviewFoto("");
 }
 
-function selecionarTime(time){
+function atualizarPlacarUI(state, animar = false){
+    document.getElementById("adversario").value = state.placar?.adversario || "";
+    document.getElementById("golsTime").value = state.placar?.golsTime ?? 0;
+    document.getElementById("golsAdversario").value = state.placar?.golsAdversario ?? 0;
+
+    const resumo = document.getElementById("placarResumo");
+    resumo.textContent = `${state.placar?.golsTime ?? 0} x ${state.placar?.golsAdversario ?? 0}`;
+
+    if(animar){
+        resumo.classList.remove("animando");
+        void resumo.offsetWidth;
+        resumo.classList.add("animando");
+        setTimeout(() => resumo.classList.remove("animando"), 400);
+    }
+}
+
+function selecionarTime(time, event){
+    if(event){
+        criarEfeitoClique(event.currentTarget, event);
+    }
+
     timeAtual = time;
     selecionado = { tipo:null, indice:null };
     fotoAtual = "";
@@ -768,6 +1072,7 @@ function selecionarTime(time){
 
     const state = getState(time);
     atualizarCampoFundo(state.campoFundo || "");
+    atualizarPlacarUI(state, false);
 
     limparCampos();
     renderizarTime();
@@ -800,7 +1105,7 @@ function renderizarTime(){
             const numero = jogador?.numero || "--";
             const foto = jogador?.foto || "";
             html += `
-                <div class="jogador ${jogador ? "" : "vazio"}" onclick="editarSlot('titular', ${idx})">
+                <div class="jogador ${jogador ? "" : "vazio"} ${selecionado.tipo === 'titular' && selecionado.indice === idx ? 'selecionado-jogador' : ''}" onclick="editarSlot('titular', ${idx}, event)">
                     ${foto ? `<img src="${foto}" alt="${nome}" class="foto-jogador">` : `<div class="avatar-vazio">👤</div>`}
                     <span class="num">${numero}</span>
                     <span class="nome">${nome}</span>
@@ -819,14 +1124,14 @@ function renderizarTime(){
     listaTitulares.innerHTML = titulares.map((j, i) => {
         if(!j){
             return `
-                <li onclick="editarSlot('titular', ${i})">
+                <li onclick="editarSlot('titular', ${i}, event)">
                     <span>Vazio</span>
                     <span class="mini">editar</span>
                 </li>
             `;
         }
         return `
-            <li onclick="editarSlot('titular', ${i})">
+            <li onclick="editarSlot('titular', ${i}, event)">
                 <span>${j.numero || "--"} - ${j.nome || "Sem nome"}</span>
                 <span class="mini">editar</span>
             </li>
@@ -839,7 +1144,7 @@ function renderizarTime(){
 
     listaBanco.innerHTML = banco.length
         ? banco.map((j, i) => `
-            <li onclick="editarSlot('banco', ${i})">
+            <li onclick="editarSlot('banco', ${i}, event)">
                 <span>${j.numero || "--"} - ${j.nome || "Sem nome"}</span>
                 <span class="mini">editar</span>
             </li>
@@ -847,7 +1152,8 @@ function renderizarTime(){
         : `<div class="vazio-msg">Nenhum jogador no banco ainda.</div>`;
 }
 
-function editarSlot(tipo, indice){
+function editarSlot(tipo, indice, event){
+    if(event) criarEfeitoClique(event.currentTarget, event);
     if(!timeAtual) return;
 
     const state = getState(timeAtual);
@@ -869,6 +1175,8 @@ function editarSlot(tipo, indice){
         fotoAtual = "";
         atualizarPreviewFoto("");
     }
+
+    renderizarTime();
 }
 
 function carregarFoto(event){
@@ -922,6 +1230,35 @@ function limparFundoCampo(){
     saveState(timeAtual, state);
     atualizarCampoFundo("");
     document.getElementById("fundoCampo").value = "";
+}
+
+function salvarPlacar(){
+    if(!timeAtual){
+        alert("Selecione uma seleção primeiro.");
+        return;
+    }
+
+    const adversario = document.getElementById("adversario").value.trim();
+    const golsTime = Number(document.getElementById("golsTime").value || 0);
+    const golsAdversario = Number(document.getElementById("golsAdversario").value || 0);
+
+    const state = getState(timeAtual);
+    const golsAntes = Number(state.placar?.golsTime || 0);
+
+    state.placar = {
+        adversario,
+        golsTime: Number.isFinite(golsTime) ? Math.max(0, golsTime) : 0,
+        golsAdversario: Number.isFinite(golsAdversario) ? Math.max(0, golsAdversario) : 0
+    };
+
+    saveState(timeAtual, state);
+    atualizarPlacarUI(state, true);
+
+    if(state.placar.golsTime > golsAntes){
+        tocarSomGol();
+    }
+
+    gerarGrupos(document.getElementById("pesquisa").value.trim() ? filtrarDados() : null);
 }
 
 function salvarJogador(){
@@ -1006,10 +1343,13 @@ function limparTime(){
     if(!timeAtual) return;
     if(!confirm("Quer apagar a escalação dessa seleção?")) return;
 
-    const state = getState(timeAtual);
     localStorage.removeItem("copa2026_" + timeAtual);
     atualizarCampoFundo("");
     document.getElementById("fundoCampo").value = "";
+    document.getElementById("adversario").value = "";
+    document.getElementById("golsTime").value = 0;
+    document.getElementById("golsAdversario").value = 0;
+    document.getElementById("placarResumo").textContent = "0 x 0";
     renderizarTime();
     limparCampos();
 }
@@ -1040,8 +1380,20 @@ function sortearSelecao(){
     selecionarTime(sorteada);
 }
 
+function runSelfTests(){
+    console.assert(criarTitularesVazios().length === 11, "Teste: titulares vazios deve ter 11 posições");
+    const s = normalizarState({ titulares:[{nome:"A"}], banco:null, placar:{ golsTime:"2", golsAdversario:"1" } });
+    console.assert(Array.isArray(s.titulares) && s.titulares.length === 11, "Teste: normalizarState deve manter 11 titulares");
+    console.assert(s.placar.golsTime === 2 && s.placar.golsAdversario === 1, "Teste: placar deve ser numérico");
+}
+
+Array.from(document.querySelectorAll('.btn')).forEach(btn => {
+    btn.addEventListener('click', (e) => criarEfeitoClique(btn, e));
+});
+
 gerarGrupos();
 selecionarTime("Brasil");
+runSelfTests();
 </script>
 
 </body>
