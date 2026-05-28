@@ -53,6 +53,24 @@
         animation: estrelas 16s linear infinite;
     }
 
+    .confetti-layer{
+        position:fixed;
+        inset:0;
+        pointer-events:none;
+        overflow:hidden;
+        z-index:999;
+    }
+
+    .confetti-piece{
+        position:absolute;
+        top:-12px;
+        width:10px;
+        height:16px;
+        border-radius:3px;
+        opacity:0;
+        animation: cairConfete 1.5s ease-out forwards;
+    }
+
     .topo{
         text-align:center;
         margin-bottom:20px;
@@ -697,6 +715,18 @@
         100%{ transform:translateY(0) scale(1); opacity:1; }
     }
 
+    @keyframes cairConfete{
+        0%{
+            transform:translateY(0) rotate(0deg);
+            opacity:0;
+        }
+        10%{ opacity:1; }
+        100%{
+            transform:translateY(110vh) rotate(720deg);
+            opacity:0;
+        }
+    }
+
     @media (max-width: 1300px){
         .container{ grid-template-columns:1fr; }
         .direita{ position:static; }
@@ -722,6 +752,8 @@
 </style>
 </head>
 <body>
+
+<div class="confetti-layer" id="confettiLayer"></div>
 
 <div class="topo">
     <h1>🏆 COPA DO MUNDO 2026</h1>
@@ -942,7 +974,6 @@ function tocarSomGol(){
         if(!audioContext){
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
-
         if(audioContext.state === "suspended"){
             audioContext.resume();
         }
@@ -951,26 +982,47 @@ function tocarSomGol(){
         const gain = audioContext.createGain();
         gain.gain.setValueAtTime(0.0001, now);
         gain.gain.exponentialRampToValueAtTime(0.35, now + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.7);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
         gain.connect(audioContext.destination);
 
-        const freqs = [220, 330, 440, 660];
-        freqs.forEach((freq, i) => {
+        [220, 330, 440, 660].forEach((freq, i) => {
             const osc = audioContext.createOscillator();
             osc.type = "sine";
             osc.frequency.setValueAtTime(freq, now + i * 0.08);
             osc.connect(gain);
             osc.start(now + i * 0.08);
-            osc.stop(now + 0.7);
+            osc.stop(now + 0.8);
         });
     }catch(err){
         console.warn("Não foi possível tocar o som de gol.", err);
     }
 }
 
+function criarConfetes(){
+    const layer = document.getElementById("confettiLayer");
+    const cores = ["#22c55e", "#3b82f6", "#facc15", "#ef4444", "#a855f7", "#ffffff"];
+
+    for(let i = 0; i < 90; i++){
+        const confete = document.createElement("span");
+        confete.className = "confetti-piece";
+        confete.style.left = Math.random() * 100 + "vw";
+        confete.style.background = cores[Math.floor(Math.random() * cores.length)];
+        confete.style.width = (6 + Math.random() * 8) + "px";
+        confete.style.height = (10 + Math.random() * 14) + "px";
+        confete.style.transform = `translateY(0) rotate(${Math.random() * 360}deg)`;
+        confete.style.animationDuration = (1.1 + Math.random() * 1.1) + "s";
+        confete.style.animationDelay = (Math.random() * 0.12) + "s";
+        layer.appendChild(confete);
+        setTimeout(() => confete.remove(), 2300);
+    }
+}
+
+function explodirConfetes(){
+    criarConfetes();
+}
+
 function virarCard(time){
-    const estadoAtual = timeVirado.has(time);
-    if(estadoAtual){
+    if(timeVirado.has(time)){
         timeVirado.delete(time);
     }else{
         timeVirado.add(time);
@@ -1256,6 +1308,7 @@ function salvarPlacar(){
 
     if(state.placar.golsTime > golsAntes){
         tocarSomGol();
+        explodirConfetes();
     }
 
     gerarGrupos(document.getElementById("pesquisa").value.trim() ? filtrarDados() : null);
