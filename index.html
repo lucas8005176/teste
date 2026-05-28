@@ -203,6 +203,8 @@
 
     .campo{
         background:linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+        background-size:cover;
+        background-position:center;
         border-radius:22px;
         border:4px solid rgba(255,255,255,.22);
         padding:16px;
@@ -210,6 +212,7 @@
         position:relative;
         overflow:hidden;
         box-shadow:inset 0 0 0 2px rgba(255,255,255,.08);
+        background-blend-mode:overlay;
     }
 
     .campo::before,
@@ -353,7 +356,9 @@
     }
 
     .linha-inputs input,
-    .linha-inputs select{
+    .linha-inputs select,
+    .linha-fundo input,
+    .linha-foto input{
         width:100%;
         padding:11px 12px;
         border-radius:12px;
@@ -363,7 +368,8 @@
         outline:none;
     }
 
-    .linha-foto{
+    .linha-foto,
+    .linha-fundo{
         display:grid;
         grid-template-columns:1fr auto;
         gap:10px;
@@ -390,6 +396,20 @@
         justify-content:center;
         background:rgba(255,255,255,.08);
         font-size:22px;
+    }
+
+    .mini-preview-fundo{
+        height:44px;
+        border-radius:12px;
+        border:1px solid rgba(255,255,255,.16);
+        background:#0b1220;
+        overflow:hidden;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:12px;
+        color:#cbd5e1;
+        padding:8px 10px;
     }
 
     .acoes-jogador{
@@ -483,7 +503,8 @@
             grid-template-columns:1fr;
         }
 
-        .linha-foto{
+        .linha-foto,
+        .linha-fundo{
             grid-template-columns:1fr;
         }
 
@@ -533,7 +554,7 @@
             <div class="tag-grupo" id="grupoTime">Sem grupo</div>
         </div>
 
-        <div class="campo">
+        <div class="campo" id="campo">
             <div class="meio-campo"></div>
 
             <div class="formacao" id="formacao"></div>
@@ -555,10 +576,16 @@
                     <div id="previewFoto" class="foto-preview-vazia">📷</div>
                 </div>
 
+                <div class="linha-fundo">
+                    <input type="file" id="fundoCampo" accept="image/*" onchange="carregarFundoCampo(event)">
+                    <div id="previewFundoCampo" class="mini-preview-fundo">Fundo do campo</div>
+                </div>
+
                 <div class="acoes-jogador">
                     <button class="btn btn-verde" onclick="salvarJogador()">Salvar jogador</button>
                     <button class="btn btn-azul" onclick="adicionarJogador()">Adicionar novo</button>
                     <button class="btn btn-cinza" onclick="limparTime()">Limpar time</button>
+                    <button class="btn btn-amarelo" onclick="limparFundoCampo()">Limpar fundo</button>
                 </div>
 
                 <div class="lista">
@@ -619,6 +646,7 @@ const defaultRosters = {
 let timeAtual = null;
 let selecionado = { tipo:null, indice:null };
 let fotoAtual = "";
+let fundoCampoAtual = "";
 
 function criarTitularesVazios(){
     return Array.from({ length: 11 }, () => null);
@@ -634,7 +662,8 @@ function normalizarState(state){
 
     return {
         titulares,
-        banco: Array.isArray(state.banco) ? state.banco : []
+        banco: Array.isArray(state.banco) ? state.banco : [],
+        campoFundo: typeof state.campoFundo === "string" ? state.campoFundo : ""
     };
 }
 
@@ -644,7 +673,7 @@ function getState(time){
         try{
             return normalizarState(JSON.parse(saved));
         }catch(e){
-            return normalizarState({ titulares: [], banco: [] });
+            return normalizarState({ titulares: [], banco: [], campoFundo: "" });
         }
     }
 
@@ -658,12 +687,28 @@ function getState(time){
 
     return {
         titulares,
-        banco: base.banco ? structuredClone(base.banco) : []
+        banco: base.banco ? structuredClone(base.banco) : [],
+        campoFundo: ""
     };
 }
 
 function saveState(time, data){
     localStorage.setItem("copa2026_" + time, JSON.stringify(data));
+}
+
+function atualizarCampoFundo(fundo){
+    const campo = document.getElementById("campo");
+    const preview = document.getElementById("previewFundoCampo");
+
+    fundoCampoAtual = fundo || "";
+
+    if(fundoCampoAtual){
+        campo.style.backgroundImage = `linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.18)), url('${fundoCampoAtual}')`;
+        preview.textContent = "Fundo aplicado";
+    }else{
+        campo.style.backgroundImage = "linear-gradient(180deg, #22c55e 0%, #16a34a 100%)";
+        preview.textContent = "Fundo do campo";
+    }
 }
 
 function gerarGrupos(listaFiltrada = null){
@@ -721,6 +766,9 @@ function selecionarTime(time){
     document.getElementById("nomeTime").textContent = time;
     document.getElementById("grupoTime").textContent = grupo ? grupo.nome : "Sem grupo";
 
+    const state = getState(time);
+    atualizarCampoFundo(state.campoFundo || "");
+
     limparCampos();
     renderizarTime();
     gerarGrupos(document.getElementById("pesquisa").value.trim() ? filtrarDados() : null);
@@ -768,26 +816,26 @@ function renderizarTime(){
     const listaTitulares = document.getElementById("listaTitulares");
     const listaBanco = document.getElementById("listaBanco");
 
-    const titularesCheios = titulares.filter(Boolean);
-
-    listaTitulares.innerHTML = titularesCheios.length
-        ? titulares.map((j, i) => {
-            if(!j){
-                return `
-                    <li onclick="editarSlot('titular', ${i})">
-                        <span>Vazio</span>
-                        <span class="mini">editar</span>
-                    </li>
-                `;
-            }
+    listaTitulares.innerHTML = titulares.map((j, i) => {
+        if(!j){
             return `
                 <li onclick="editarSlot('titular', ${i})">
-                    <span>${j.numero || "--"} - ${j.nome || "Sem nome"}</span>
+                    <span>Vazio</span>
                     <span class="mini">editar</span>
                 </li>
             `;
-        }).join("")
-        : `<div class="vazio-msg">Nenhum titular adicionado ainda.</div>`;
+        }
+        return `
+            <li onclick="editarSlot('titular', ${i})">
+                <span>${j.numero || "--"} - ${j.nome || "Sem nome"}</span>
+                <span class="mini">editar</span>
+            </li>
+        `;
+    }).join("");
+
+    if(!titulares.some(Boolean)){
+        listaTitulares.innerHTML = `<div class="vazio-msg">Nenhum titular adicionado ainda.</div>`;
+    }
 
     listaBanco.innerHTML = banco.length
         ? banco.map((j, i) => `
@@ -846,6 +894,34 @@ function carregarFoto(event){
         }
     };
     leitor.readAsDataURL(arquivo);
+}
+
+function carregarFundoCampo(event){
+    const arquivo = event.target.files[0];
+    if(!arquivo) return;
+
+    const leitor = new FileReader();
+    leitor.onload = function(e){
+        const fundo = e.target.result;
+        atualizarCampoFundo(fundo);
+
+        if(timeAtual){
+            const state = getState(timeAtual);
+            state.campoFundo = fundo;
+            saveState(timeAtual, state);
+        }
+    };
+    leitor.readAsDataURL(arquivo);
+}
+
+function limparFundoCampo(){
+    if(!timeAtual) return;
+
+    const state = getState(timeAtual);
+    state.campoFundo = "";
+    saveState(timeAtual, state);
+    atualizarCampoFundo("");
+    document.getElementById("fundoCampo").value = "";
 }
 
 function salvarJogador(){
@@ -930,7 +1006,10 @@ function limparTime(){
     if(!timeAtual) return;
     if(!confirm("Quer apagar a escalação dessa seleção?")) return;
 
+    const state = getState(timeAtual);
     localStorage.removeItem("copa2026_" + timeAtual);
+    atualizarCampoFundo("");
+    document.getElementById("fundoCampo").value = "";
     renderizarTime();
     limparCampos();
 }
