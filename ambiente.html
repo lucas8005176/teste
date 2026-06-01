@@ -1,393 +1,216 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Conscientização do Meio Ambiente</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    html {
-      scroll-behavior: smooth;
-    }
+<title>Esporte e Meio Ambiente - Copa do Mundo 2026</title>
 
-    body {
-      background: linear-gradient(180deg, #0f172a 0%, #14532d 100%);
-      color: #fff;
-      min-height: 100vh;
-    }
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
 
-    header {
-      background: rgba(0, 0, 0, 0.35);
-      backdrop-filter: blur(8px);
-      padding: 20px 8%;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
+body{
+    background:linear-gradient(135deg,#0f172a,#14532d);
+    color:white;
+    min-height:100vh;
+}
 
-    .container {
-      width: 100%;
-      max-width: 1200px;
-      margin: auto;
-    }
+header{
+    text-align:center;
+    padding:40px 20px;
+    background:rgba(0,0,0,0.3);
+}
 
-    .nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
+header h1{
+    font-size:3rem;
+    color:#4ade80;
+}
 
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #86efac;
-    }
+header p{
+    margin-top:10px;
+    color:#d1fae5;
+    font-size:1.1rem;
+}
 
-    .menu {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
+.hero{
+    text-align:center;
+    padding:80px 20px;
+}
 
-    .menu a {
-      color: #fff;
-      text-decoration: none;
-      font-weight: 600;
-      transition: 0.3s;
-    }
+.hero h2{
+    font-size:2.5rem;
+    margin-bottom:20px;
+}
 
-    .menu a:hover {
-      color: #86efac;
-    }
+.hero p{
+    max-width:800px;
+    margin:auto;
+    line-height:1.8;
+    font-size:1.1rem;
+}
 
-    .hero {
-      min-height: 90vh;
-      display: flex;
-      align-items: center;
-      padding: 40px 8%;
-      background:
-        linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
-        url("https://images.unsplash.com/photo-1472148439583-1f4cf81b80e0?auto=format&fit=crop&w=1600&q=80") center/cover no-repeat;
-    }
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:25px;
+    padding:50px 8%;
+}
 
-    .hero-content {
-      max-width: 700px;
-    }
+.card{
+    background:rgba(255,255,255,0.08);
+    padding:25px;
+    border-radius:20px;
+    transition:0.3s;
+    border:1px solid rgba(255,255,255,0.1);
+}
 
-    .hero h1 {
-      font-size: clamp(2.2rem, 5vw, 4.5rem);
-      margin-bottom: 20px;
-      line-height: 1.1;
-    }
+.card:hover{
+    transform:translateY(-8px);
+}
 
-    .hero p {
-      font-size: 1.1rem;
-      line-height: 1.7;
-      margin-bottom: 30px;
-      color: #e5e7eb;
-    }
+.card h3{
+    color:#4ade80;
+    margin-bottom:15px;
+}
 
-    .btn {
-      display: inline-block;
-      background: #22c55e;
-      color: white;
-      text-decoration: none;
-      padding: 14px 26px;
-      border-radius: 999px;
-      font-weight: bold;
-      transition: 0.3s;
-      border: none;
-      cursor: pointer;
-    }
+.card p{
+    line-height:1.7;
+}
 
-    .btn:hover {
-      background: #16a34a;
-      transform: translateY(-2px);
-    }
+.section{
+    padding:60px 8%;
+}
 
-    section {
-      padding: 80px 8%;
-    }
+.section h2{
+    text-align:center;
+    margin-bottom:30px;
+    color:#4ade80;
+}
 
-    .section-title {
-      text-align: center;
-      font-size: 2.2rem;
-      margin-bottom: 15px;
-      color: #bbf7d0;
-    }
+.lista{
+    max-width:900px;
+    margin:auto;
+}
 
-    .section-subtitle {
-      text-align: center;
-      max-width: 750px;
-      margin: 0 auto 40px auto;
-      color: #d1d5db;
-      line-height: 1.6;
-    }
+.lista li{
+    margin:15px 0;
+    line-height:1.8;
+}
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 25px;
-    }
+.botao{
+    display:inline-block;
+    margin-top:30px;
+    background:#22c55e;
+    color:white;
+    padding:15px 30px;
+    text-decoration:none;
+    border-radius:50px;
+    font-weight:bold;
+    transition:0.3s;
+}
 
-    .card {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 20px;
-      padding: 28px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      transition: 0.3s;
-    }
+.botao:hover{
+    background:#16a34a;
+}
 
-    .card:hover {
-      transform: translateY(-6px);
-      background: rgba(255,255,255,0.12);
-    }
+footer{
+    text-align:center;
+    padding:25px;
+    background:rgba(0,0,0,0.3);
+    margin-top:50px;
+}
+</style>
 
-    .card h3 {
-      color: #86efac;
-      margin-bottom: 12px;
-      font-size: 1.2rem;
-    }
-
-    .card p {
-      color: #e5e7eb;
-      line-height: 1.6;
-    }
-
-    .impact {
-      background: rgba(0,0,0,0.25);
-    }
-
-    .impact-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-    }
-
-    .impact-box {
-      text-align: center;
-      padding: 30px 20px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-
-    .impact-number {
-      font-size: 2.4rem;
-      font-weight: bold;
-      color: #86efac;
-      margin-bottom: 10px;
-    }
-
-    .impact-box p {
-      color: #e5e7eb;
-      line-height: 1.5;
-    }
-
-    .actions {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 25px;
-    }
-
-    .action-item {
-      padding: 25px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.08);
-      border-left: 5px solid #22c55e;
-    }
-
-    .action-item h3 {
-      margin-bottom: 10px;
-      color: #bbf7d0;
-    }
-
-    .action-item p {
-      color: #e5e7eb;
-      line-height: 1.6;
-    }
-
-    .quiz {
-      text-align: center;
-      background: rgba(255,255,255,0.06);
-      border-radius: 24px;
-      padding: 40px 25px;
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-
-    .quiz p {
-      margin: 20px 0;
-      font-size: 1.1rem;
-      color: #e5e7eb;
-    }
-
-    footer {
-      text-align: center;
-      padding: 30px 20px;
-      background: rgba(0,0,0,0.4);
-      color: #d1d5db;
-      border-top: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .highlight {
-      color: #86efac;
-      font-weight: bold;
-    }
-
-    @media (max-width: 768px) {
-      .hero {
-        min-height: 80vh;
-        padding-top: 120px;
-      }
-
-      .menu {
-        justify-content: center;
-      }
-
-      .hero-content {
-        text-align: center;
-        margin: 0 auto;
-      }
-    }
-  </style>
 </head>
 <body>
 
-  <header>
-    <div class="container nav">
-      <div class="logo">🌱 EcoVida</div>
-      <nav class="menu">
-        <a href="#inicio">Início</a>
-        <a href="#importancia">Importância</a>
-        <a href="#acoes">Ações</a>
-        <a href="#quiz">Quiz</a>
-      </nav>
-    </div>
-  </header>
+<header>
+    <h1>⚽ Copa do Mundo 2026 & Meio Ambiente 🌱</h1>
+    <p>Unindo esporte, sustentabilidade e consciência ambiental</p>
+</header>
 
-  <main>
-    <section class="hero" id="inicio">
-      <div class="hero-content">
-        <h1>Conscientização do Meio Ambiente</h1>
+<section class="hero">
+    <h2>Esporte e Natureza Jogando no Mesmo Time</h2>
+    <p>
+        A Copa do Mundo é um dos maiores eventos esportivos do planeta.
+        Além de promover o futebol e a união entre os povos, ela também pode
+        incentivar práticas sustentáveis que ajudam a proteger o meio ambiente.
+        Cuidar da natureza é uma responsabilidade de todos os torcedores,
+        atletas e organizadores.
+    </p>
+</section>
+
+<section class="cards">
+
+    <div class="card">
+        <h3>♻️ Reciclagem nos Estádios</h3>
         <p>
-          Cuidar do planeta é uma responsabilidade de todos. Pequenas atitudes no dia a dia
-          podem fazer uma grande diferença para preservar a natureza, reduzir a poluição e garantir
-          um futuro melhor para as próximas gerações.
+            A coleta seletiva reduz a quantidade de resíduos enviados para aterros
+            e contribui para a reutilização de materiais.
         </p>
-        <a class="btn" href="#acoes">Ver ações sustentáveis</a>
-      </div>
-    </section>
+    </div>
 
-    <section id="importancia">
-      <div class="container">
-        <h2 class="section-title">Por que isso é importante?</h2>
-        <p class="section-subtitle">
-          A conscientização ambiental ajuda a sociedade a entender os impactos das nossas escolhas
-          e incentiva hábitos mais responsáveis e sustentáveis.
+    <div class="card">
+        <h3>🚲 Transporte Sustentável</h3>
+        <p>
+            Incentivar bicicletas, transporte público e veículos elétricos ajuda
+            a diminuir a emissão de gases poluentes.
         </p>
+    </div>
 
-        <div class="cards">
-          <div class="card">
-            <h3>Preservação da natureza</h3>
-            <p>Evitar o desmatamento e o desperdício de recursos naturais ajuda a manter o equilíbrio do planeta.</p>
-          </div>
-          <div class="card">
-            <h3>Menos poluição</h3>
-            <p>Reduzir lixo, fumaça e consumo excessivo melhora a qualidade do ar, da água e do solo.</p>
-          </div>
-          <div class="card">
-            <h3>Futuro sustentável</h3>
-            <p>Pequenas atitudes de hoje garantem mais qualidade de vida para as próximas gerações.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="impact">
-      <div class="container">
-        <h2 class="section-title">Impactos positivos</h2>
-        <p class="section-subtitle">
-          Quando cada pessoa faz sua parte, o resultado aparece na cidade, na natureza e na saúde de todos.
+    <div class="card">
+        <h3>💧 Economia de Água</h3>
+        <p>
+            Sistemas modernos de reaproveitamento de água podem ser utilizados
+            em estádios e centros esportivos.
         </p>
+    </div>
 
-        <div class="impact-grid">
-          <div class="impact-box">
-            <div class="impact-number">3R</div>
-            <p>Reduzir, Reutilizar e Reciclar são atitudes essenciais para diminuir o lixo.</p>
-          </div>
-          <div class="impact-box">
-            <div class="impact-number">100%</div>
-            <p>Todos podem colaborar com ações simples como economizar água e energia.</p>
-          </div>
-          <div class="impact-box">
-            <div class="impact-number">1 planeta</div>
-            <p>Temos apenas um lar: cuidar dele é uma necessidade urgente.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="acoes">
-      <div class="container">
-        <h2 class="section-title">Ações que fazem a diferença</h2>
-        <p class="section-subtitle">
-          Adotar hábitos sustentáveis no dia a dia é uma maneira prática de proteger o meio ambiente.
+    <div class="card">
+        <h3>🌳 Plantio de Árvores</h3>
+        <p>
+            Projetos ambientais ligados ao esporte ajudam a compensar impactos
+            ambientais e deixam um legado positivo.
         </p>
+    </div>
 
-        <div class="actions">
-          <div class="action-item">
-            <h3>Economizar água</h3>
-            <p>Feche a torneira ao escovar os dentes, tome banhos rápidos e reaproveite a água sempre que possível.</p>
-          </div>
-          <div class="action-item">
-            <h3>Separar o lixo</h3>
-            <p>Faça a coleta seletiva e descarte corretamente materiais recicláveis como papel, plástico, vidro e metal.</p>
-          </div>
-          <div class="action-item">
-            <h3>Plantar árvores</h3>
-            <p>As árvores ajudam a purificar o ar, fornecem sombra e contribuem para o equilíbrio climático.</p>
-          </div>
-          <div class="action-item">
-            <h3>Evitar desperdícios</h3>
-            <p>Consuma somente o necessário e prefira produtos reutilizáveis para gerar menos resíduos.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+</section>
 
-    <section id="quiz">
-      <div class="container">
-        <div class="quiz">
-          <h2 class="section-title">Vamos refletir?</h2>
-          <p>
-            <span class="highlight">A natureza precisa de cuidado.</span> O que você pode fazer hoje para ajudar o planeta?
-          </p>
-          <button class="btn" onclick="mostrarMensagem()">Clique aqui</button>
-          <p id="mensagem" style="margin-top: 20px; font-weight: bold; color: #bbf7d0;"></p>
-        </div>
-      </div>
-    </section>
-  </main>
+<section class="section">
+    <h2>Como os Torcedores Podem Ajudar?</h2>
 
-  <footer>
-    <p>🌍 Site criado para incentivar a conscientização do meio ambiente.</p>
-  </footer>
+    <ul class="lista">
+        <li>✅ Utilizar lixeiras de coleta seletiva.</li>
+        <li>✅ Evitar desperdício de água e energia.</li>
+        <li>✅ Usar garrafas reutilizáveis.</li>
+        <li>✅ Optar por meios de transporte sustentáveis.</li>
+        <li>✅ Participar de campanhas ambientais.</li>
+        <li>✅ Respeitar áreas verdes e espaços públicos.</li>
+    </ul>
 
-  <script>
-    function mostrarMensagem() {
-      const mensagem = document.getElementById("mensagem");
-      mensagem.textContent = "Comece com pequenas atitudes: economize água, recicle e respeite a natureza!";
-    }
-  </script>
+    <div style="text-align:center;">
+        <a href="#" class="botao" onclick="mensagemVerde()">
+            Faça sua Parte 🌱
+        </a>
+    </div>
+</section>
+
+<footer>
+    <p>
+        Copa do Mundo 2026 • Esporte, Sustentabilidade e Futuro Melhor 🌎
+    </p>
+</footer>
+
+<script>
+function mensagemVerde(){
+    alert("Parabéns! Pequenas atitudes ajudam a preservar o planeta. 🌱");
+}
+</script>
+
 </body>
 </html>
