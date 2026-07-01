@@ -3,121 +3,92 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Upload de Arquivos</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
-}
-
 body{
-    background:#1e293b;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#0f172a;
+    color:white;
     display:flex;
     justify-content:center;
     align-items:center;
     height:100vh;
+    margin:0;
 }
 
-.card{
-    background:white;
-    padding:40px;
-    border-radius:20px;
-    width:450px;
+.container{
+    background:#1e293b;
+    padding:30px;
+    border-radius:15px;
+    width:400px;
     text-align:center;
-    box-shadow:0 10px 30px rgba(0,0,0,.3);
-}
-
-h1{
-    margin-bottom:20px;
+    box-shadow:0 0 20px rgba(0,0,0,.4);
 }
 
 input{
     margin:20px 0;
 }
 
-button{
-    background:#2563eb;
-    color:white;
+button,a{
+    padding:12px 25px;
     border:none;
-    padding:12px 30px;
     border-radius:8px;
+    background:#3b82f6;
+    color:white;
     cursor:pointer;
-    font-size:16px;
+    text-decoration:none;
+    display:inline-block;
+    margin-top:15px;
 }
 
-button:hover{
-    background:#1d4ed8;
+button:hover,a:hover{
+    background:#2563eb;
 }
 
 #info{
     margin-top:20px;
-    color:#555;
 }
 </style>
-
 </head>
 <body>
 
-<div class="card">
-
-<h1>Upload de Arquivo</h1>
+<div class="container">
+<h2>Upload de Arquivo</h2>
 
 <input type="file" id="arquivo">
 
-<br>
+<div id="info"></div>
 
-<button onclick="baixar()">Baixar Arquivo</button>
-
-<p id="info"></p>
+<a id="download" style="display:none;">Baixar Arquivo</a>
 
 </div>
 
 <script>
 
-let arquivoSelecionado;
+const arquivo = document.getElementById("arquivo");
+const info = document.getElementById("info");
+const download = document.getElementById("download");
 
-document.getElementById("arquivo").addEventListener("change",function(){
+arquivo.addEventListener("change",function(){
 
-arquivoSelecionado=this.files[0];
+    const file = this.files[0];
 
-if(arquivoSelecionado){
+    if(!file) return;
 
-document.getElementById("info").innerHTML=
-"Arquivo: <b>"+arquivoSelecionado.name+
-"</b><br>Tamanho: "+
-(arquivoSelecionado.size/1024).toFixed(2)+" KB";
+    info.innerHTML=`
+        <p><b>Nome:</b> ${file.name}</p>
+        <p><b>Tamanho:</b> ${(file.size/1024).toFixed(2)} KB</p>
+    `;
 
-}
+    const url = URL.createObjectURL(file);
+
+    download.href=url;
+    download.download=file.name;
+    download.innerText="Baixar Arquivo";
+    download.style.display="inline-block";
 
 });
-
-function baixar(){
-
-if(!arquivoSelecionado){
-
-alert("Escolha um arquivo.");
-
-return;
-
-}
-
-const url=URL.createObjectURL(arquivoSelecionado);
-
-const a=document.createElement("a");
-
-a.href=url;
-
-a.download=arquivoSelecionado.name;
-
-a.click();
-
-URL.revokeObjectURL(url);
-
-}
 
 </script>
 
